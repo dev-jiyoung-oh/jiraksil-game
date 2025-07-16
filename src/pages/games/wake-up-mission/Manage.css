@@ -1,0 +1,20 @@
+.manage-container {
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.manage-title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.contacts-list {
+  list-style: none;
+}
+
+.toggle-all-cards {
+  background-color: #2196f3;
+  color: white;
+}
+

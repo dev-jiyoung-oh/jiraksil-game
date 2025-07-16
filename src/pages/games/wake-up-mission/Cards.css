@@ -1,0 +1,38 @@
+.cards-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cards-title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.cards-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 160px;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.card button {
+  padding: 0.5rem;
+}
+
+.card.viewed {
+  opacity: 0.5;
+}
+
+.card-placeholder {
+  font-size: 0.85rem;
+  color: #888;
+}
