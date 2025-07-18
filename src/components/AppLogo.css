@@ -1,8 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap'); */
 
 .app-logo {
-  font-family: 'Bungee', sans-serif;
-  font-size: 1.2rem;
   background: linear-gradient(90deg, #3fd0d4, #f06ca0);
   background-clip: text;
   -webkit-background-clip: text;
