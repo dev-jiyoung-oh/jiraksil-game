@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import './Home.css'
 
 const games = [
@@ -20,32 +20,19 @@ const games = [
 ]
 
 export default function Home() {
-  const navigate = useNavigate()
-
-  const handleClick = (id: string) => {
-    if (id === 'quiz') {
-      // 퀴즈 카테고리 선택 기본값: character
-      navigate(`/game/quiz/character`)
-    } else {
-      navigate(`/game/${id}`)
-    }
-  }
-
   return (
     <div className="home-container">
       <h1 className="home-title">지구오락실 게임 선택</h1>
-      <div className="game-card-list">
+      <ul className="game-card-list">
         {games.map((game) => (
-          <div
-            key={game.id}
-            className="game-card"
-            onClick={() => handleClick(game.id)}
-          >
-            <h3>{game.name}</h3>
-            <p>{game.description}</p>
-          </div>
+          <li key={game.id}>
+            <Link to={`/game/${game.id}`} className="game-card">
+              <h3>{game.name}</h3>
+              <p>{game.description}</p>
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   )
 }
