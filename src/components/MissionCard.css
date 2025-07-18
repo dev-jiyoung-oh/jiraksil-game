@@ -1,12 +1,13 @@
 .mission-card {
   border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 8px;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
   width: 160px;
   height: 220px;
   text-align: center;
-  font-size: 0.95rem;
+  font-size: var(--font-size-small);
   display: flex;
+  gap: var(--spacing-sm);
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -14,14 +15,15 @@
   background-color: #222;
   color: white;
   cursor: pointer;
-  transition: transform 0.3s, opacity 0.3s;
+  transition: transform 0.3s, opacity 0.3s, background 0.3s;
   transform-origin: center center;
 }
 
-/* 카드 보기 hover */
+/* 카드 보기 hover/focus (관리자/유저 공통, 비활성화 제외) */
 .mission-card.clickable:not(:disabled):is(:hover, :focus) {
   transform: scale(1.05);
 }
+/* 카드 닫힌 상태 hover/focus */
 .mission-card.clickable:not(:disabled):is(:hover, :focus):not(.opened) {
   background-color: #333;
 }
@@ -40,45 +42,12 @@
 
 /* 미션 텍스트 */
 .mission-text {
-  margin-bottom: 0.5rem;
-  word-break: break-word;
-  font-size: 0.95rem;
-}
-
-/* 확인 완료 텍스트 */
-.confirm-text {
-  margin-top: 0.5rem;
-}
-
-/* 버튼 공통 */
-.mission-card button.confirm {
-  background-color: #4caf50;
-  color: white;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.mission-card button.force {
-  background-color: #f44336;
-  color: white;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* 카드 보기 라벨 */
-.card-view-label {
-  margin-top: 0.5rem;
+  word-break: break-all;
 }
 
 /* disabled 처리 */
 .mission-card:disabled,
 .mission-card[aria-disabled="true"] {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: var(--spacing-sm);
 }

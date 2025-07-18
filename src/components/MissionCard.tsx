@@ -17,20 +17,18 @@ export default function MissionCard({
 }: MissionCardProps) {
   if (mode === 'manager') {
     return (
-      
-
       <button
         type="button"
         className={`mission-card ${mission.opened ? 'opened' : ''} clickable`}
-        aria-label={mission.opened ? '미션 내용' : '미공개 카드'}
+        aria-label={mission.opened ? `미션 내용: ${mission.text}` : '미공개 카드 보기'}
         onClick={onToggle}
         >
         {mission.opened ? (
           <p className="mission-text">{mission.text}</p>
         ) : (
           <>
-            <AppLogo />
-            <span className="card-view-label">카드 보기</span>
+            <AppLogo role="presentation"/>
+            <span>카드 보기</span>
           </>
         )}
       </button>
@@ -42,9 +40,8 @@ export default function MissionCard({
     return (
       <div
         className="mission-card viewed"
-        aria-label="확인 완료"
       >
-        <AppLogo />
+        <AppLogo role="presentation"/>
         <span>확인 완료</span>
       </div>
     );
@@ -54,13 +51,11 @@ export default function MissionCard({
     return (
       <div
         className="mission-card opened"
-        role="group"
-        aria-label="미션 내용"
       >
-        <p className="mission-text">{mission.text}</p>
+        <p className="mission-text font-base">{mission.text}</p>
         <button
           type="button"
-          className="confirm"
+          className="btn btn-success"
           onClick={onToggle}
         >
           확인 완료
@@ -76,10 +71,9 @@ export default function MissionCard({
       onClick={onToggle}
       disabled={isDisabled}
       aria-disabled={isDisabled}
-      aria-label="카드 보기"
     >
-      <AppLogo />
-      <span className="card-view-label">카드 보기</span>
+      <AppLogo role="presentation"/>
+      <span>카드 보기</span>
     </button>
   );
 }
