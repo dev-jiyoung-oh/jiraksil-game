@@ -1,4 +1,4 @@
 export interface Mission {
-  id: number;
-  text: string;
+  assignedPlayer: number;
+  content: string;
 }
