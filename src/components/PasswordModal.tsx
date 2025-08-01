@@ -44,7 +44,7 @@ export default function PasswordModal({ onVerify, onCancel }: PasswordModalProps
             {onCancel && (
               <button
                 type="button"
-                className="back"
+                className="btn back"
                 onClick={onCancel}
                 disabled={loading}
               >
@@ -52,7 +52,7 @@ export default function PasswordModal({ onVerify, onCancel }: PasswordModalProps
               </button>
             )}
 
-            <button type="submit" disabled={loading || !password.trim()}>
+            <button type="submit" className="btn" disabled={loading || !password.trim()}>
               확인
             </button>
           </div>

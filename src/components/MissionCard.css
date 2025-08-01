@@ -49,5 +49,5 @@
 .mission-card:disabled,
 .mission-card[aria-disabled="true"] {
   cursor: not-allowed;
-  opacity: var(--spacing-sm);
+  opacity: 0.5;
 }

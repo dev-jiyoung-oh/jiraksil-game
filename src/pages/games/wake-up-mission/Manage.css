@@ -1,12 +1,14 @@
 .manage-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 0 auto;
   padding: 2rem;
   max-width: 600px;
-  margin: 0 auto;
 }
 
 .manage-title {
   font-size: 1.8rem;
-  margin-bottom: 1rem;
 }
 
 .contacts-list {
