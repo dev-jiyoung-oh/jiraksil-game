@@ -18,14 +18,14 @@ export default function MissionCardList({
   return (
     <ul className="mission-card-list">
       {missions.map((m) => (
-        <li key={m.id}>
+        <li key={m.assignedPlayer}>
           <MissionCard
             mission={m}
             mode={mode}
             isDisabled={
               mode === 'user' && !m.opened && anyOpened
             }
-            onToggle={() => onToggle(m.id)}
+            onToggle={() => onToggle(m.assignedPlayer)}
           />
         </li>
       ))}

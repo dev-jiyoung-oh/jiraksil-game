@@ -20,11 +20,11 @@ export default function MissionCard({
       <button
         type="button"
         className={`mission-card ${mission.opened ? 'opened' : ''} clickable`}
-        aria-label={mission.opened ? `미션 내용: ${mission.text}` : '미공개 카드 보기'}
+        aria-label={mission.opened ? `미션 내용: ${mission.content}` : '미공개 카드 보기'}
         onClick={onToggle}
         >
         {mission.opened ? (
-          <p className="mission-text">{mission.text}</p>
+          <p className="mission-text">{mission.content}</p>
         ) : (
           <>
             <AppLogo role="presentation"/>
@@ -52,7 +52,7 @@ export default function MissionCard({
       <div
         className="mission-card opened"
       >
-        <p className="mission-text font-base">{mission.text}</p>
+        <p className="mission-text font-base">{mission.content}</p>
         <button
           type="button"
           className="btn btn-success"

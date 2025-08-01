@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import type { GameData } from '@/types/wakeUpMission';
 import './New.css'
 
 export default function WakeUpMissionNew() {
@@ -43,27 +44,29 @@ export default function WakeUpMissionNew() {
         body: JSON.stringify({
           numPlayers,
           wakeUpTime,
-          contacts: contacts.filter((c) => c.trim() !== ''),
+          contacts: contacts.filter((c) => c.trim() !== '').join(','),
           password,
         }),
-      })
+      });
 
       if (!response.ok) {
         throw new Error('게임 생성에 실패했습니다.')
       }
 
-      const data = await response.json()
-      const { gameId } = data
+      const data: GameData = await response.json();
 
-      navigate(`/game/wake-up-mission/${gameId}`)
+      navigate(`/game/wake-up-mission/${data.id}`, {
+        state: data,
+      });
+
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message)
+        setError(err.message);
       } else {
-        setError('알 수 없는 오류가 발생했습니다.')
+        setError('알 수 없는 오류가 발생했습니다.');
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -159,8 +162,6 @@ export default function WakeUpMissionNew() {
         <button type="submit" disabled={loading}>
           {loading ? '게임 생성 중...' : '게임 생성하기'}
         </button>
-
-        {error && <p className="error">{error}</p>}
       </form>
     </div>
   )

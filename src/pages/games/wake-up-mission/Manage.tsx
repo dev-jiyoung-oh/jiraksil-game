@@ -4,6 +4,7 @@ import MissionCardList from '@/components/MissionCardList';
 import PasswordModal from '@/components/PasswordModal';
 import type { Mission } from '@/types/mission';
 import type { GameData } from '@/types/wakeUpMission';
+import { formatDateTime } from '@/utils/date';
 import './Manage.css';
 
 type MissionWithState = Mission & { opened: boolean };
@@ -21,7 +22,7 @@ export default function Manage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/wake-up-mission/${gameId}/verify`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/wake-up-mission/${gameId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
@@ -37,7 +38,7 @@ export default function Manage() {
       const data: GameData = await res.json();
       setMissions(data.missions.map((m) => ({ ...m, opened: false })));
       setWakeUpTime(data.wakeUpTime);
-      setContacts(data.contacts || []);
+      setContacts(data.contacts?.split(',') || []);
       setIsVerified(true);
       return data;
     } catch (err) {
@@ -56,10 +57,10 @@ export default function Manage() {
     );
   };
 
-  const handleToggle = (id: number) => {
+  const handleToggle = (assignedPlayer: number) => {
     setMissions((prev) =>
       prev.map((m) =>
-        m.id === id ? { ...m, opened: !m.opened } : m
+        m.assignedPlayer === assignedPlayer ? { ...m, opened: !m.opened } : m
       )
     );
   };
@@ -77,7 +78,7 @@ export default function Manage() {
 
           {!loading && (
             <>
-              {wakeUpTime && <p>기상시간: {wakeUpTime}</p>}
+              {wakeUpTime && <p>기상시간: {formatDateTime(wakeUpTime)}</p>}
               {contacts.length > 0 && (
                 <div>
                   <p>연락처:</p>
@@ -89,7 +90,7 @@ export default function Manage() {
                 </div>
               )}
 
-              <button type="button" className="toggle-all-cards" onClick={toggleAll}>
+              <button type="button" className="btn toggle-all-cards" onClick={toggleAll}>
                 {missions.every((m) => m.opened) ? '모든 카드 닫기' : '모든 카드 뒤집기'}
               </button>
 
