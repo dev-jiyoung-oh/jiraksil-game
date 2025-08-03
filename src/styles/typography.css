@@ -1,3 +1,4 @@
+/* 글자 크기 */
 .font-sm {
   font-size: var(--font-size-small);
 }
@@ -8,4 +9,46 @@
 
 .font-lg {
   font-size: var(--font-size-large);
+}
+
+/* 글자 색 */
+.font-white {
+  color: var(--color-text-white);
+}
+
+.font-dark {
+  color: var(--color-text-dark);
+}
+
+.font-gray {
+  color: var(--color-disabled);
+}
+
+.font-primary {
+  color: var(--color-primary);
+}
+
+.font-primary-dark {
+  color: var(--color-primary-dark);
+}
+
+.font-success {
+  color: var(--color-success);
+}
+
+.font-danger {
+  color: var(--color-danger);
+}
+
+/* 글자 굵기 */
+.font-light {
+  font-weight: var(--font-light);
+}
+
+.font-medium {
+  font-weight: var(--font-medium);
+}
+
+.font-bold {
+  font-weight: var(--font-bold);
 }

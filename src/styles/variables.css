@@ -6,7 +6,7 @@
   --color-danger: #f44336;
   --color-disabled: #ccc;
 
-  --color-text-light: #ffffff;
+  --color-text-white: #ffffff;
   --color-text-dark: #000000;
 
   /* spacing */
@@ -20,10 +20,8 @@
   --font-size-base: 1rem;
   --font-size-small: 0.875rem;
   --font-size-large: 1.25rem;
-  --font-light: 300;
-  --font-normal: 400;
+  --font-weight-light: 300;
   --font-medium: 500;
-  --font-semibold: 600;
   --font-bold: 700;
 
   /* radius */
