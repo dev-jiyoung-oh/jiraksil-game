@@ -1,5 +1,6 @@
-@import './styles/reset.css';
 @import 'normalize.css';
+@import './styles/reset.css';
+@import './styles/a11y.css';
 @import './styles/variables.css';
 @import './styles/buttons.css';
 @import './styles/typography.css';

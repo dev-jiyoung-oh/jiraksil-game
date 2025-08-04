@@ -1,0 +1,22 @@
+/* 화면에는 보이지 않지만 스크린리더에서만 읽히도록 함 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 요소를 완전히 숨기되 스크린리더에서도 읽히지 않음 */
+.hidden {
+  display: none !important;
+}
+
+/* 시각적으로 숨기지만 레이아웃 차지 (스크린리더에서 읽힘) */
+.invisible {
+  visibility: hidden;
+}
