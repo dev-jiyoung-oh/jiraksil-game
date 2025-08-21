@@ -17,15 +17,17 @@
 
 .info-text {
   font-size: 0.9rem;
+  line-height: 1.2;
   color: #555;
   background: #f0f0f0;
   padding: 0.75rem;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .new-form label {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
   font-size: 0.9rem;
 }
 
@@ -33,12 +35,15 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  margin-bottom: 0.25rem;
 }
 
 .required {
-  color: #e53935;
+  color: var(--color-danger);
   font-weight: bold;
+}
+
+.label-info-text {
+  color: var(--color-text-gray);
 }
 
 .new-form input {
@@ -46,32 +51,16 @@
   font-size: 1rem;
 }
 
-.add-contact {
-  margin-top: 0.5rem;
-  background: #eee;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-  font-size: 0.9rem;
+.new-form button {
   border-radius: 4px;
 }
 
 .new-form button[type="submit"] {
   padding: 0.75rem;
   font-size: 1rem;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 .new-form button[disabled] {
   background-color: #9ccc9c;
   cursor: default;
-}
-
-.error {
-  color: red;
-  font-size: 0.9rem;
 }

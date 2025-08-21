@@ -1,48 +1,48 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { GameData } from '@/types/wakeUpMission';
-import './New.css'
+import './New.css';
 
 export default function WakeUpMissionNew() {
-  const [numPlayers, setNumPlayers] = useState(1)
-  const [wakeUpTime, setWakeUpTime] = useState('')
-  const [contacts, setContacts] = useState<string[]>([])
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
+  const [numPlayers, setNumPlayers] = useState(1);
+  const [wakeUpTime, setWakeUpTime] = useState('');
+  const [contacts, setContacts] = useState<string[]>([]);
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
 
   const clearError = () => {
     if (error) setError('');
-  }
+  };
 
   const handleNumPlayersChange = (value: string) => {
     clearError();
     setNumPlayers(Number(value));
-  }
+  };
 
   const handleWakeUpTimeChange = (value: string) => {
     clearError();
     setWakeUpTime(value);
-  }
+  };
   
   const handlePasswordChange = (value: string) => {
     clearError();
     setPassword(value);
-  }
+  };
   
   const handleContactChange = (index: number, value: string) => {
     clearError();
     setContacts((prev) =>
       prev.map((c, i) => (i === index ? value : c))
-    )
-  }
+    );
+  };
 
   const addContactField = () => {
     clearError();
-    setContacts((prev) => [...prev, ''])
-  }
+    setContacts((prev) => [...prev, '']);
+  };
 
   const removeContact = (index: number) => {
     clearError();
@@ -50,8 +50,8 @@ export default function WakeUpMissionNew() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    clearError();
     
     if (!password || password.length < 4) {
       setError('비밀번호는 최소 4자리 이상이어야 합니다.');
@@ -73,7 +73,7 @@ export default function WakeUpMissionNew() {
       });
 
       if (!response.ok) {
-        throw new Error('게임 생성에 실패했습니다.')
+        throw new Error('게임 생성에 실패했습니다.');
       }
 
       const data: GameData = await response.json();
@@ -91,7 +91,7 @@ export default function WakeUpMissionNew() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <main className="new-container">
@@ -205,5 +205,5 @@ export default function WakeUpMissionNew() {
         </button>
       </form>
     </main>
-  )
+  );
 }

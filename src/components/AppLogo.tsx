@@ -1,4 +1,4 @@
-import './AppLogo.css'
+import './AppLogo.css';
 
 interface AppLogoProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'base' | 'lg';
@@ -11,5 +11,5 @@ export default function AppLogo({ size = 'lg', ...props }: AppLogoProps) {
       <span>지락실</span>
       <span aria-hidden="true">🚀</span>
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import WakeUpMissionRouter from './pages/games/wake-up-mission/Router'
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import WakeUpMissionRouter from './pages/games/wake-up-mission/Router';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <Route path="/game" element={<Home />} />
       <Route path="/game/wake-up-mission/*" element={<WakeUpMissionRouter />} />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;

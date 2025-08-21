@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import './Home.css'
+import { Link } from 'react-router-dom';
+import './Home.css';
 
 const games = [
   {
@@ -10,14 +10,14 @@ const games = [
   {
     id: 'quiz',
     name: '퀴즈 게임',
-    description: '인물, 과자, 아이스크림 퀴즈 맞추기'
+    description: '사진 보고 이름 맞추는 게임'
   },
   {
     id: 'body-language',
     name: '몸으로 말해요',
     description: '제시어를 몸으로 표현하는 게임'
   }
-]
+];
 
 export default function Home() {
   return (
@@ -34,5 +34,5 @@ export default function Home() {
         ))}
       </ul>
     </div>
-  )
+  );
 }

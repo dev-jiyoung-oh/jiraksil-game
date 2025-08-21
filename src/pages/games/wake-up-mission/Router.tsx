@@ -1,7 +1,7 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import New from './New'
-import Cards from './Cards'
-import Manage from './Manage'
+import { Routes, Route, Navigate } from 'react-router-dom';
+import New from './New';
+import Cards from './Cards';
+import Manage from './Manage';
 
 export default function WakeUpMissionRouter() {
   return (
@@ -12,5 +12,5 @@ export default function WakeUpMissionRouter() {
       <Route path=":gameId/manage" element={<Manage />} />
       <Route path="*" element={<Navigate to="/new" replace />} />
     </Routes>
-  )
+  );
 }
