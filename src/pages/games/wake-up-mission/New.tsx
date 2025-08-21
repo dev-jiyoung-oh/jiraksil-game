@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { GameData } from '@/types/wakeUpMission';
+import { formatPhoneNumber } from '@/utils/phoneNumber';
 import './New.css';
 
 export default function WakeUpMissionNew() {
@@ -35,7 +36,7 @@ export default function WakeUpMissionNew() {
   const handleContactChange = (index: number, value: string) => {
     clearError();
     setContacts((prev) =>
-      prev.map((c, i) => (i === index ? value : c))
+      prev.map((c, i) => (i === index ? formatPhoneNumber(value) : c))
     );
   };
 
@@ -95,7 +96,7 @@ export default function WakeUpMissionNew() {
 
   return (
     <main className="new-container">
-      <h1 className="new-title">Wake Up Mission - 게임 생성</h1>
+      <h1 className="new-title">자네 지금 뭐 하는 건가 - 게임 생성</h1>
 
       <div className="info-text" id="new-form-info">
         <p>ℹ️ 기상 시간과 연락처는 선택사항입니다.</p>
@@ -144,7 +145,7 @@ export default function WakeUpMissionNew() {
         </div>
 
 
-        <fieldset>
+        <fieldset className="form-group">
           <legend className="label-text">연락처</legend>
           <small id="contacts-desc" className="font-gray">카카오톡으로 "랜덤 기상 집합 장소"를 전달받을 때 필요합니다.</small>
 
@@ -160,7 +161,7 @@ export default function WakeUpMissionNew() {
                       value={contact}
                       onChange={(e) => handleContactChange(index, e.target.value)}
                     />
-                    <button type="button" aria-label={`연락처 ${index + 1} 삭제`} className="btn btn-danger font-sm" onClick={() => removeContact(index)}>
+                    <button type="button" aria-label={`연락처 ${index + 1} 삭제`} className="btn btn-danger del-btn" onClick={() => removeContact(index)}>
                       삭제
                     </button>
                   </li>

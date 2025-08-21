@@ -61,7 +61,7 @@ export default function Cards() {
   
   return (
     <div className="cards-container">
-      <h2 className="cards-title">Wake Up Mission - 미션 확인</h2>
+      <h2 className="cards-title">자네 지금 뭐 하는 건가 - 미션 확인</h2>
 
       { loading && <div>로딩 중...</div> }
       { error && <div>{error}</div> }

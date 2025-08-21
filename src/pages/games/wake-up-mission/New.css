@@ -9,12 +9,6 @@
   margin-bottom: 1.5rem;
 }
 
-.new-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 .info-text {
   font-size: 0.9rem;
   line-height: 1.2;
@@ -22,9 +16,26 @@
   background: #f0f0f0;
   padding: 0.75rem;
   border-radius: 4px;
+  margin-bottom: 1.5rem;
 }
 
-.new-form label {
+.new-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.label-text {
+  font-weight: bold;
+}
+/* .new-form label {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -35,11 +46,10 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-}
+} */
 
 .required {
   color: var(--color-danger);
-  font-weight: bold;
 }
 
 .label-info-text {
@@ -63,4 +73,8 @@
 .new-form button[disabled] {
   background-color: #9ccc9c;
   cursor: default;
+}
+
+.del-btn {
+  margin-left: 0.25rem;
 }

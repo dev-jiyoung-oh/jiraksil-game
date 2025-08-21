@@ -72,7 +72,7 @@ export default function Manage() {
       {!isVerified && <PasswordModal onVerify={handleVerify} />}
       {isVerified && (
         <>
-          <h2 className='manage-title'>Wake Up Mission - 관리 화면</h2>
+          <h2 className='manage-title'>자네 지금 뭐 하는 건가 - 관리 화면</h2>
           
           {loading && <p>로딩 중...</p>}
 
