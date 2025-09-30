@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import MissionCardList from '@/components/MissionCardList';
 import type { Mission } from '@/types/mission';
-import type { GameData } from '@/types/wakeUpMission';
+import type { WakeUpMissionGame } from '@/types/wakeUpMission';
 import { formatDateTime } from '@/utils/date';
 import './Cards.css';
 
@@ -10,7 +10,7 @@ type MissionWithState = Mission & { opened: boolean; viewed: boolean };
 
 export default function Cards() {
   const location = useLocation();
-  const state = location.state as GameData | undefined;
+  const state = location.state as WakeUpMissionGame | undefined;
 
   const [missions, setMissions] = useState<MissionWithState[]>([]);
   const [wakeUpTime, setWakeUpTime] = useState<string | null>(null);

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import './PasswordModal.css';
-import type { GameData } from '@/types/wakeUpMission';
+import type { WakeUpMissionGame } from '@/types/wakeUpMission';
 
 
 interface PasswordModalProps {
-  onVerify: (password: string) => Promise<GameData | null>;
+  onVerify: (password: string) => Promise<WakeUpMissionGame | null>;
   onCancel?: () => void;
 }
 
@@ -19,7 +19,7 @@ export default function PasswordModal({ onVerify, onCancel }: PasswordModalProps
     setError(null);
     const data = await onVerify(password);
     if (!data) {
-      setError('게임 ID가 존재하지 않거나 비밀번호가 일치하지 않습니다.');
+      setError('게임이 존재하지 않거나 비밀번호가 일치하지 않습니다.');
     }
     setLoading(false);
   };

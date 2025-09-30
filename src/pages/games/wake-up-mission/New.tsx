@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { GameData } from '@/types/wakeUpMission';
+import type { WakeUpMissionGame } from '@/types/wakeUpMission';
 import { formatPhoneNumber } from '@/utils/phoneNumber';
 import './New.css';
 
@@ -77,9 +77,10 @@ export default function WakeUpMissionNew() {
         throw new Error('게임 생성에 실패했습니다.');
       }
 
-      const data: GameData = await response.json();
+      const data: WakeUpMissionGame = await response.json();
 
-      navigate(`/game/wake-up-mission/${data.id}`, {
+      // TODO id 수정 -> code
+      navigate(`/game/wake-up-mission/${data.code}`, {
         state: data,
       });
 

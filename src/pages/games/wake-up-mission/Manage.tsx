@@ -3,7 +3,7 @@ import { useState } from 'react';
 import MissionCardList from '@/components/MissionCardList';
 import PasswordModal from '@/components/PasswordModal';
 import type { Mission } from '@/types/mission';
-import type { GameData } from '@/types/wakeUpMission';
+import type { WakeUpMissionGame } from '@/types/wakeUpMission';
 import { formatDateTime } from '@/utils/date';
 import './Manage.css';
 
@@ -35,7 +35,7 @@ export default function Manage() {
         return null;
       }
 
-      const data: GameData = await res.json();
+      const data: WakeUpMissionGame = await res.json();
       setMissions(data.missions.map((m) => ({ ...m, opened: false })));
       setWakeUpTime(data.wakeUpTime);
       setContacts(data.contacts?.split(',') || []);
