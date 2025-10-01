@@ -1,107 +1,102 @@
+import api from "@/api/api";
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import MissionCardList from '@/components/MissionCardList';
 import PasswordModal from '@/components/PasswordModal';
-import type { Mission } from '@/types/mission';
-import type { WakeUpMissionGame } from '@/types/wakeUpMission';
+import type { WakeUpMissionGame, WakeUpMissionGameViewModel } from '@/types/wakeUpMission';
 import { formatDateTime } from '@/utils/date';
 import './Manage.css';
 
-type MissionWithState = Mission & { opened: boolean };
-
 export default function Manage() {
-  const { gameId } = useParams();
-  const [missions, setMissions] = useState<MissionWithState[]>([]);
-  const [wakeUpTime, setWakeUpTime] = useState<string | null>(null);
-  const [contacts, setContacts] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isVerified, setIsVerified] = useState(false);
+  const { gameCode } = useParams();
+  const [gameData, setGameData] = useState<WakeUpMissionGameViewModel | null>(null);
+  
+  const [showModal, setShowModal] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleVerify = async (password: string) => {
-    setLoading(true);
-    setError(null);
+  const handlePasswordSubmit = async (password: string) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/wake-up-mission/${gameId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+      setErrorMessage("");
+      
+      const { data } = await api.post<WakeUpMissionGame>(
+        `/wake-up-mission/${gameCode}`,
+        { password },
+      );
+
+      setGameData({
+        ...data,
+        missions: data.missions.map((m) => ({ ...m, opened: false })),
+        contacts: data.contacts?.split(',') || [],
       });
+      setShowModal(false);
 
-      if (res.status === 401) return null;
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || '조회 실패');
-        return null;
-      }
-
-      const data: WakeUpMissionGame = await res.json();
-      setMissions(data.missions.map((m) => ({ ...m, opened: false })));
-      setWakeUpTime(data.wakeUpTime);
-      setContacts(data.contacts?.split(',') || []);
-      setIsVerified(true);
-      return data;
     } catch (err) {
-      console.error(err);
-      setError('서버 오류');
-      return null;
-    } finally {
-      setLoading(false);
+      if (err instanceof Error) {
+        setErrorMessage(err.message || "조회에 실패했습니다.");
+      } else {
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 
+  // 모든 미션 토글
   const toggleAll = () => {
-    const allOpened = missions.every((m) => m.opened);
-    setMissions((prev) =>
-      prev.map((m) => ({ ...m, opened: !allOpened }))
-    );
+    setGameData((prev) => {
+      if (!prev) return prev; // null safety
+
+      const allOpened = prev.missions.every((m) => m.opened);
+      return {
+        ...prev,
+        missions: prev.missions.map((m) => ({ ...m, opened: !allOpened })),
+      };
+    });
   };
 
+  // 특정 미션 토글
   const handleToggle = (assignedPlayer: number) => {
-    setMissions((prev) =>
-      prev.map((m) =>
-        m.assignedPlayer === assignedPlayer ? { ...m, opened: !m.opened } : m
-      )
-    );
-  };
+    setGameData((prev) => {
+      if (!prev) return prev;
 
-  if (error) return <div>{error}</div>;
+      return {
+        ...prev,
+        missions: prev.missions.map((m) =>
+          m.assignedPlayer === assignedPlayer ? { ...m, opened: !m.opened } : m
+        )
+      };
+    });
+  };
+  
 
   return (
     <div className="manage-container">
-      {!isVerified && <PasswordModal onVerify={handleVerify} />}
-      {isVerified && (
-        <>
-          <h2 className='manage-title'>자네 지금 뭐 하는 건가 - 관리 화면</h2>
-          
-          {loading && <p>로딩 중...</p>}
+      <h2 className='manage-title'>자네 지금 뭐 하는 건가 - 관리 화면</h2>
 
-          {!loading && (
-            <>
-              {wakeUpTime && <p>기상시간: {formatDateTime(wakeUpTime)}</p>}
-              {contacts.length > 0 && (
-                <div>
-                  <p>연락처:</p>
-                  <ul className='contacts-list'>
-                    {contacts.map((c) => (
-                      <li key={c}>{c}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+      {showModal && <PasswordModal onSubmit={handlePasswordSubmit} errorMessage={errorMessage}/>}
 
-              <button type="button" className="btn toggle-all-cards" onClick={toggleAll}>
-                {missions.every((m) => m.opened) ? '모든 카드 닫기' : '모든 카드 뒤집기'}
-              </button>
-
-              <MissionCardList
-                missions={missions}
-                mode="manager"
-                onToggle={handleToggle}
-              />
-            </>
+      {!showModal && gameData && (
+        <div className="manage-contents">
+          {gameData.wakeUpTime && <p>기상시간: {formatDateTime(gameData.wakeUpTime)}</p>}
+          {gameData.contacts && gameData.contacts.length > 0 && (
+            <div>
+              <p>연락처:</p>
+              <ul className='contacts-list'>
+                {gameData.contacts.map((c) => (
+                  <li key={c}>{c}</li>
+                ))}
+              </ul>
+            </div>
           )}
-        </>
+
+          <button type="button" className="btn toggle-all-cards" onClick={toggleAll}>
+            {gameData.missions.every((m) => m.opened) ? '모든 카드 닫기' : '모든 카드 열기'}
+          </button>
+
+          <MissionCardList
+            missions={gameData.missions}
+            mode="manager"
+            onToggle={handleToggle}
+          />
+        </div>
       )}
     </div>
   );

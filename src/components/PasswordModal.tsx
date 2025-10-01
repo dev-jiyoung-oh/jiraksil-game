@@ -1,27 +1,25 @@
 import { useState } from 'react';
 import './PasswordModal.css';
-import type { WakeUpMissionGame } from '@/types/wakeUpMission';
-
 
 interface PasswordModalProps {
-  onVerify: (password: string) => Promise<WakeUpMissionGame | null>;
-  onCancel?: () => void;
+  onSubmit: (password: string) => Promise<void>;
+  onClose?: () => void;
+  errorMessage?: string;
 }
 
-export default function PasswordModal({ onVerify, onCancel }: PasswordModalProps) {
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+export default function PasswordModal({ onSubmit, onClose, errorMessage }: PasswordModalProps) {
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    const data = await onVerify(password);
-    if (!data) {
-      setError('게임이 존재하지 않거나 비밀번호가 일치하지 않습니다.');
+
+    try {
+      await onSubmit(password);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -38,14 +36,14 @@ export default function PasswordModal({ onVerify, onCancel }: PasswordModalProps
             disabled={loading}
           />
 
-          {error && <p className="error">{error}</p>}
+          {errorMessage && <p className="error">{errorMessage}</p>}
 
           <div className="buttons">
-            {onCancel && (
+            {onClose && (
               <button
                 type="button"
                 className="btn back"
-                onClick={onCancel}
+                onClick={onClose}
                 disabled={loading}
               >
                 뒤로가기

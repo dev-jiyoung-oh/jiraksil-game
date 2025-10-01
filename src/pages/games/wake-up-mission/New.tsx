@@ -1,3 +1,4 @@
+import api from "@/api/api";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { WakeUpMissionGame } from '@/types/wakeUpMission';
@@ -59,34 +60,27 @@ export default function WakeUpMissionNew() {
       return;
     }
 
-    setLoading(true);
-
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/wake-up-mission`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      setLoading(true);
+
+      const { data } = await api.post<WakeUpMissionGame>(
+        "/wake-up-mission",
+        {
           numPlayers,
           wakeUpTime,
-          contacts: contacts.filter((c) => c.trim()).join(','),
+          contacts: contacts.filter((c) => c.trim()).join(","),
           password,
-        }),
-      });
+        },
+      );
 
-      if (!response.ok) {
-        throw new Error('게임 생성에 실패했습니다.');
-      }
-
-      const data: WakeUpMissionGame = await response.json();
-
-      // TODO id 수정 -> code
+      // 생성된 게임 페이지로 이동
       navigate(`/game/wake-up-mission/${data.code}`, {
         state: data,
       });
 
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setError(err.message || "게임 생성에 실패했습니다.");
       } else {
         setError('알 수 없는 오류가 발생했습니다.');
       }

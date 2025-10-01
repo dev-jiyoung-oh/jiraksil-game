@@ -8,8 +8,8 @@ export default function WakeUpMissionRouter() {
     <Routes>
       <Route index element={<New />} />
       <Route path="new" element={<New />} />
-      <Route path=":gameId" element={<Cards />} />
-      <Route path=":gameId/manage" element={<Manage />} />
+      <Route path=":gameCode" element={<Cards />} />
+      <Route path=":gameCode/manage" element={<Manage />} />
       <Route path="*" element={<Navigate to="/new" replace />} />
     </Routes>
   );
