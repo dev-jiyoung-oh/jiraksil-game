@@ -15,9 +15,7 @@ export default function WakeUpMissionNew() {
   const navigate = useNavigate();
 
 
-  const clearError = () => {
-    if (error) setError('');
-  };
+  const clearError = () => error && setError('');
 
   const handleNumPlayersChange = (value: string) => {
     clearError();
@@ -140,7 +138,7 @@ export default function WakeUpMissionNew() {
         </div>
 
 
-        <fieldset className="form-group">
+        <fieldset className="form-group" aria-describedby="contacts-desc">
           <legend className="label-text">연락처</legend>
           <small id="contacts-desc" className="font-gray">카카오톡으로 "랜덤 기상 집합 장소"를 전달받을 때 필요합니다.</small>
 
@@ -152,7 +150,6 @@ export default function WakeUpMissionNew() {
                       type="tel"
                       name="contact"
                       placeholder="010-0000-0000"
-                      aria-describedby="contacts-desc"
                       value={contact}
                       onChange={(e) => handleContactChange(index, e.target.value)}
                     />
