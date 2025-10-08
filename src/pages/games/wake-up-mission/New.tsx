@@ -17,9 +17,9 @@ export default function WakeUpMissionNew() {
 
   const clearError = () => error && setError('');
 
-  const handleNumPlayersChange = (value: string) => {
+  const handleNumPlayersChange = (value: number) => {
     clearError();
-    setNumPlayers(Number(value));
+    setNumPlayers(value);
   };
 
   const handleWakeUpTimeChange = (value: string) => {
@@ -119,7 +119,7 @@ export default function WakeUpMissionNew() {
             min={1}
             max={30}
             value={numPlayers}
-            onChange={(e) => handleNumPlayersChange(e.target.value)}
+            onChange={(e) => handleNumPlayersChange(Number(e.target.value))}
             required
           />
         </div>
