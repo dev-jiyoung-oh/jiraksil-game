@@ -4,16 +4,11 @@ import './Home.css';
 const games = [
   {
     id: 'wake-up-mission',
-    name: 'Wake Up Mission',
+    name: '자네 지금 뭐 하는 건가',
     description: '기상 미션 수행 게임'
   },
   {
-    id: 'quiz',
-    name: '퀴즈 게임',
-    description: '사진 보고 이름 맞추는 게임'
-  },
-  {
-    id: 'body-language',
+    id: 'charades',
     name: '몸으로 말해요',
     description: '제시어를 몸으로 표현하는 게임'
   }
