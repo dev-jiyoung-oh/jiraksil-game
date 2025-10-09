@@ -1,9 +1,9 @@
 import MissionCard from '@/components/MissionCard';
-import type { Mission } from '@/types/mission';
+import type { WakeUpMission } from '@/types/wakeUpMission';
 import './MissionCardList.css';
 
 interface MissionCardListProps {
-  missions: (Mission & { opened: boolean })[];
+  missions: (WakeUpMission & { opened: boolean })[];
   mode: 'user' | 'manager';
   onToggle: (id: number) => void;
 }

@@ -1,9 +1,9 @@
 import AppLogo from '@/components/AppLogo';
-import type { Mission } from '@/types/mission';
+import type { WakeUpMissionMissionViewModel } from '@/types/wakeUpMission';
 import './MissionCard.css';
 
 interface MissionCardProps {
-  mission: Mission & { opened: boolean; viewed?: boolean };
+  mission: WakeUpMissionMissionViewModel;
   mode: 'user' | 'manager';
   isDisabled?: boolean;
   onToggle: () => void;
