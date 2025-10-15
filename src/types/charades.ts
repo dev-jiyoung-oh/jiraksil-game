@@ -43,6 +43,7 @@ export interface GameResultResponse {
 export interface WordDto {
     id: number;
     text: string;
+    description: string;
 }
 
 export interface WordBatchResponse {
