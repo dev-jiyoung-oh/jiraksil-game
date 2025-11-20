@@ -1,8 +1,8 @@
 import api from "@/api/api";
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
-import MissionCardList from '@/components/MissionCardList';
-import PasswordModal from '@/components/PasswordModal';
+import MissionCardList from '@/components/wake-up-mission/MissionCardList';
+import PasswordModal from '@/components/common/PasswordModal';
 import type { WakeUpMissionGame, WakeUpMissionGameViewModel } from '@/types/wakeUpMission';
 import { formatDateTime } from '@/utils/date';
 import './Manage.css';

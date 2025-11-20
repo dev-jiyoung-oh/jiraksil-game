@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import MissionCardList from '@/components/MissionCardList';
+import MissionCardList from '@/components/wake-up-mission/MissionCardList';
 import type { WakeUpMissionGame, WakeUpMissionGameViewModel } from '@/types/wakeUpMission';
 import { formatDateTime } from '@/utils/date';
 import './Cards.css';
