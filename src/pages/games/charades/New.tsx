@@ -112,9 +112,7 @@ export default function CharadesNew() {
       });
 
       // 성공 시 게임 진행 페이지로 이동
-      navigate(`/game/charades/${data.code}`, {
-        state: data
-      });
+      navigate(`/game/charades/${data.code}`);
 
     } catch (err) {
       if (err instanceof Error) {
