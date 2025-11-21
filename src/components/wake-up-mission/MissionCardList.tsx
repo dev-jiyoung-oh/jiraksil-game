@@ -1,4 +1,4 @@
-import MissionCard from '@/components/MissionCard';
+import MissionCard from '@/components/wake-up-mission/MissionCard';
 import type { WakeUpMission } from '@/types/wakeUpMission';
 import './MissionCardList.css';
 

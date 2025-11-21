@@ -1,4 +1,4 @@
-import AppLogo from '@/components/AppLogo';
+import AppLogo from '@/components/common/AppLogo';
 import type { WakeUpMissionMissionViewModel } from '@/types/wakeUpMission';
 import './MissionCard.css';
 
