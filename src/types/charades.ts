@@ -23,7 +23,7 @@ export type GameStatus =
     | "INTERMISSION"
     | "FINISHED";
 
-export interface GameSnapshotResponse {
+export interface GameDetailResponse {
     code: string;
     mode: GameMode;
     durationSec: number | null;
@@ -50,20 +50,30 @@ export interface WordBatchResponse {
     words: WordDto[];
 }
 
+export type TurnAction = "CORRECT" | "PASS";
+
 export interface TurnWordRequest {
-    idx?: number;
+    idx: number;
     wordId?: number;
     wordText: string;
-    action: "CORRECT" | "PASS";
+    action: TurnAction;
     atSec: number;
 }
 
 export interface FinalizeTurnRequest {
+    teamCode: string;
+    roundIndex: number;
+    correctCount: number;
+    usedPass: number;
     timeUsedSec?: number;
     elapsedSec?: number;
-    correctCount?: number;
-    usedPass?: number;
-    turnWords?: TurnWordRequest[];
+    startedAt: string;
+    endedAt: string;
+    words: TurnWordRequest[];
+}
+
+export interface FinalizeGameRequest {
+  turns: FinalizeTurnRequest[];
 }
 
 export interface CreateGameRequest {
@@ -84,6 +94,12 @@ export interface CreateGameResponse {
 
 // ========== 프론트 전용 타입 ==========
 
-export interface CharadesGameViewModel extends GameSnapshotResponse {
+export interface CharadesGameViewModel extends GameDetailResponse {
     timer?: number; // 프론트에서 사용하는 남은 시간 표시용 (UI 전용)
 }
+
+export type CurrentTurn = Omit<FinalizeTurnRequest, "startedAt" | "endedAt">
+& {
+  startedAt: Date | null;
+  endedAt: Date | null;
+};
