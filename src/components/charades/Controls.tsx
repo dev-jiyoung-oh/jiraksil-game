@@ -30,11 +30,11 @@ export default function Controls({
       {/* 타이머 제어 */}
       <div className="controls-row">
         {!isRunning ? (
-          <button className="btn btn-start" onClick={onStart}>
+          <button type="button" className="btn btn-start" onClick={onStart}>
             ▶ 시작
           </button>
         ) : (
-          <button className="btn btn-pause" onClick={onPause}>
+          <button type="button" className="btn btn-pause" onClick={onPause}>
             ⏸ 일시정지
           </button>
         )}
@@ -42,25 +42,17 @@ export default function Controls({
 
       {/* 게임 액션 */}
       <div className="controls-row">
-        <button className="btn btn-correct" onClick={onCorrect} disabled={!isRunning}>
+        <button type="button" className="btn btn-correct" onClick={onCorrect} disabled={!isRunning}>
           ✅ 정답
         </button>
-        <button
-          className="btn btn-pass"
-          onClick={onPass}
-          disabled={!isRunning || !canPass}
-        >
+        <button type="button" className="btn btn-pass" onClick={onPass} disabled={!isRunning || !canPass}>
           ↩ 패스
         </button>
       </div>
 
       {/* 턴 종료 */}
       <div className="controls-row">
-        <button
-          className="btn btn-end"
-          onClick={onEndTurn}
-          disabled={!isRunning}
-        >
+        <button type="button" className="btn btn-end" onClick={onEndTurn} disabled={!isRunning}>
           ⏹ 턴 종료
         </button>
       </div>

@@ -34,20 +34,26 @@ export default function TurnInfoBar({
   return (
     <div className="turn-info-bar">
       {/* 팀 & 라운드 정보 */}
-      <div className="turn-info-section">
-        <span className="team-name">{teamName}</span>
-        <span className="round">Round {roundIndex + 1}</span>
+      <div className="turn-info-bar__group">
+        <span className="turn-info-bar__team">{teamName}</span>
+        <span className="turn-info-bar__round">Round {roundIndex + 1}</span>
       </div>
 
       {/* 정답 / 패스 */}
-      <div className="turn-info-section">
-        <span className="stat">
-          정답: <b>{correctCount}</b>
-          {mode === "UNTIL_CLEAR" && targetCount !== undefined && ` / ${targetCount}`}
-        </span>
-        <span className="stat">
-          패스: <b>{usedPass}</b> / {passLimit}
-        </span>
+      <div className="turn-info-bar__group">
+        <div className="stat">
+          <span className="stat__label">정답</span>
+          <span className="stat__value">{correctCount}</span>
+          {mode === "UNTIL_CLEAR" && targetCount !== undefined && (
+            <span className="stat__extra"> / {targetCount}</span>
+          )}
+        </div>
+
+        <div className="stat">
+          <span className="stat__label">패스</span>
+          <span className="stat__value">{usedPass}</span>
+          <span className="stat__extra"> / {passLimit}</span>
+        </div>
       </div>
     </div>
   );

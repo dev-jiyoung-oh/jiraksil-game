@@ -33,11 +33,11 @@ export default function WordCard({
   return (
     <div className={`wordcard-container ${flip ? "flip" : ""}`}>
       <div className="wordcard">
-        <div className={`wordcard-front ${isVisible ? "visible" : "hidden"}`}>
+        <div className={`wordcard-front ${isVisible ? "visible" : "hidden"}`} aria-hidden={!isVisible}>
           <p className="word-text">{isVisible ? word : "❓"}</p>
         </div>
       </div>
-      <p className={`word-index ${isVisible ? "visible" : "hidden"}`}>
+      <p className={`word-index ${isVisible ? "visible" : "hidden"}`} aria-hidden={!isVisible}>
         {index}
       </p>
     </div>

@@ -119,72 +119,85 @@ export default function RoundModal({
 
         {/* --- INTERMISSION --- */}
         {isIntermission && currentTeam && (
-          <>
+          <section className="intermission-section">
             <p className="team-name">{currentTeam.name}</p>
 
-            <div className="intermission-stats">
-              <div className="stat-box">
-                <span className="label">정답</span>
-                <span className="value correct">{correctCount}</span>
-              </div>
+            <table className="intermission-stats">
+              <tbody>
+                <tr>
+                  <th>정답</th>
+                  <td className="correct">{correctCount}</td>
+                </tr>
+                <tr>
+                  <th>패스</th>
+                  <td>{usedPass}</td>
+                </tr>
+                {elapsedSec !== undefined && (
+                  <tr>
+                    <th>걸린 시간</th>
+                    <td>{elapsedSec}</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
 
-              <div className="stat-box">
-                <span className="label">패스</span>
-                <span className="value">{usedPass}</span>
-              </div>
-
-              {elapsedSec !== undefined && (
-                <div className="stat-box">
-                  <span className="label">걸린 시간</span>
-                  <span className="value">{elapsedSec}s</span>
-                </div>
-              )}
-            </div>
-
-            <button className="modal-btn" onClick={onNext}>
+            <button type="button" className="modal-btn" onClick={onNext}>
               다음 턴 시작 ▶
             </button>
-          </>
+          </section>
         )}
 
         {/* --- FINISHED --- */}
         {isFinished && finalResult && (
-          <>
-            <div className="winner-section">
-              <h3 className="title">🎉 우승 팀 🎉</h3>
+          <section className="finished-section">
+            <section className="winner-section">
+              <h3 className="title">🏆 {finalResult.winners.length > 1 ? "공동 우승 팀" : "우승 팀"} 🏆</h3>
+              
               <ul className="list">
                 {finalResult.winners.map(w => (
-                    <li key={w.teamCode} className="item">
+                    <li key={w.teamCode} className="item is-winner">
                       <span className="team-name">{w.teamName}</span>
                     </li>
                   ))}
               </ul>
-            </div>
+            </section>
 
-            <h4 className="result-subtitle">최종 순위</h4>
-            <ul className="result-list">
-              {finalResult.result.map(team => (
-                <li
-                  key={team.teamCode}
-                  className={`result-item ${
-                    team.rank === 1
-                      ? "is-winner"
-                      : ""
-                  }`}
-                >
-                  <span className="rank">{team.rank}위</span>
-                  <span className="name">{team.teamName}</span>
-                  <span className="score">
-                    {team.totalCorrect}점 / {team.totalTime}s / {team.totalPass}패스
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <section className="result-section">
+              <h4 className="title">최종 순위</h4>
+              <table className="score-table">
+                <thead>
+                  <tr>
+                    <th>순위</th>
+                    <th>팀명</th>
+                    <th>정답</th>
+                    <th>걸린 시간(초)</th>
+                    <th>패스</th>
+                  </tr>
+                </thead>
 
-            <button className="modal-btn save" onClick={onSave}>
-              결과 저장
-            </button>
-          </>
+                <tbody>
+                  {finalResult.result.map(team => (
+                    <tr
+                      key={team.teamCode}
+                      className={team.rank === 1 ? "is-winner" : ""}
+                    >
+                      <td className="rank">{team.rank}</td>
+                      <td className="name">{team.teamName}</td>
+                      <td className="score">{team.totalCorrect}</td>
+                      <td className="time">{team.totalTime}</td>
+                      <td className="pass">{team.totalPass}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+
+            <footer>
+              <button type="button" className="btn modal-btn save" onClick={onSave}>
+                결과 저장
+              </button>
+            </footer>
+          </section>
         )}
       </div>
     </div>
