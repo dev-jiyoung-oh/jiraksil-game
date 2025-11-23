@@ -132,13 +132,6 @@ export default function Play() {
     }
   }
 
-  /*
-  // 데이터 준비 안된 경우
-  if (!gameData || !words || !currentTeam) {
-    return <p>게임 준비중...</p>;
-  }
-  */
-
   // 현재 턴에서의 팀/라운드 계산
   function calcCurrentTeamInfo() {
     if (!gameData) return { team: null, roundIdx: 0 };
@@ -158,6 +151,7 @@ export default function Play() {
 
   const { team: currentTeam, roundIdx } = calcCurrentTeamInfo();
   
+  // 데이터 준비 안된 경우
   if (!gameData || !currentTeam || !words || words.length === 0) {
     return <p>게임 준비중...</p>;
   }
@@ -173,8 +167,7 @@ export default function Play() {
       roundIndex: freshRound,
       correctCount: 0,
       usedPass: 0,
-      timeUsedSec: gameData.mode === "LIMITED" ? 0 : undefined,
-      elapsedSec: gameData.mode === "UNTIL_CLEAR" ? 0 : undefined,
+      elapsedSec: 0,
       startedAt: new Date(),
       endedAt: null,
       words: [],
@@ -207,8 +200,7 @@ export default function Play() {
       ...currentTurn,
       startedAt: currentTurn.startedAt!.toISOString(),
       endedAt: ended.toISOString(),
-      timeUsedSec: gameData.mode === "LIMITED" ? timerSec : undefined,
-      elapsedSec: gameData.mode === "UNTIL_CLEAR" ? timerSec : undefined,
+      elapsedSec: timerSec,
     };
     
     // 누적 기록 push
@@ -279,6 +271,8 @@ export default function Play() {
 
     try {
       await finalizeGame(gameData.code, { turns });
+      // TODO 동기 처리?
+      // TODO 다시하기 기능 추가. 혹은 페이지 나가기? 혹은 관리화면으로 가기?
       //alert("게임 결과 저장 완료!");
     } catch {
       alert("결과 저장 중 오류 발생!");

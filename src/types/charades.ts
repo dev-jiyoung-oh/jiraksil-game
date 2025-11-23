@@ -65,8 +65,7 @@ export interface FinalizeTurnRequest {
     roundIndex: number;
     correctCount: number;
     usedPass: number;
-    timeUsedSec?: number;
-    elapsedSec?: number;
+    elapsedSec: number;
     startedAt: string;
     endedAt: string;
     words: TurnWordRequest[];

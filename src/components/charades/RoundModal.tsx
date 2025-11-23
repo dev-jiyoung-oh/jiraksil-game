@@ -44,7 +44,7 @@ function computeResults(teams: CharadesTeam[], turns: FinalizeTurnRequest[]) {
     if (!rec) continue;
 
     rec.totalCorrect += turn.correctCount ?? 0;
-    rec.totalTime += turn.elapsedSec ?? turn.timeUsedSec ?? 0;
+    rec.totalTime += turn.elapsedSec ?? 0;
     rec.totalPass += turn.usedPass ?? 0;
   }
   
