@@ -1,14 +1,28 @@
 import api from "./api";
 import type {
+  CategoryDto,
+  CreateGameRequest,
+  GameInfoResponse,
   WordBatchResponse,
   FinalizeGameRequest,
   GameResultResponse,
-  GameDetailResponse,
 } from "@/types/charades";
 
+// 카테고리 조회
+export async function getCateories(): Promise<CategoryDto[]> {
+  const res = await api.get("/charades/categories");
+  return res.data;
+}
+
+// 게임 생성
+export async function createGame(data: CreateGameRequest): Promise<GameInfoResponse> {
+  const res = await api.post("/charades", data);
+  return res.data;
+}
+
 // 게임 정보 조회
-export async function getGameDetail(gameCode: string): Promise<GameDetailResponse> {
-  const res = await api.get(`/charades/${gameCode}`);
+export async function getGameDetail(gameCode: string, password: string): Promise<GameInfoResponse> {
+  const res = await api.post(`/charades/${gameCode}`, { password });
   return res.data;
 }
 

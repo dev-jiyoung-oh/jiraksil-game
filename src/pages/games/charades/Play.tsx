@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import PasswordModal from '@/components/common/PasswordModal';
 
 import {
   getGameDetail,
@@ -8,7 +9,7 @@ import {
 } from "@/api/charades";
 
 import type {
-  GameDetailResponse,
+  GameInfoResponse,
   WordDto,
   FinalizeTurnRequest,
   GameStatus,
@@ -26,11 +27,21 @@ import RoundModal from "@/components/charades/RoundModal";
  */
 export default function Play() {
   const { gameCode } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  /** 게임 생성 후 전달된 초기 데이터 (새로고침 시엔 존재 X) */
+  const initialData = location.state as GameInfoResponse | undefined;
 
   // 게임 상세 정보
-  const [gameData, setGameData] = useState<GameDetailResponse | null>(null);
+  const [gameData, setGameData] = useState<GameInfoResponse | null>(initialData ?? null);
+
+  // 인증 관련
+  const [isVerified, setIsVerified] = useState(!!initialData || false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   // 단어 배치
-  const [words, setWords] = useState<WordDto[] | null>(null);
+  const [words, setWords] = useState<WordDto[]>([]);
   const [noMoreWords, setNoMoreWords] = useState(false);
   const [isLoadingWords, setIsLoadingWords] = useState(false);
   const [wordIdx, setWordIdx] = useState(0);
@@ -47,19 +58,19 @@ export default function Play() {
 
   // 초기 로딩
   useEffect(() => {
-    if (!gameCode) return;
+    if (!gameCode) {
+      alert("잘못된 접근입니다.");
+      navigate("/game/charades");
+    }
 
-    getGameDetail(gameCode)
-      .then(data => {
-        setGameData(data);
-        return loadMoreWords();
-      })
-      .catch(err => {
-        alert("게임 정보를 불러오지 못했습니다.");
-        console.log(err.message); // TODO 삭제
-      });
+    if (!gameData) {
+      alert("잘못된 접근입니다. 새로고침 시 비밀번호 인증이 필요합니다.");
+      setIsVerified(false);
+    }
+
+    loadMoreWords();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameCode]);
+  }, []);
 
   // 타이머 동작
   useEffect(() => {
@@ -109,6 +120,27 @@ export default function Play() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData, wordIdx, words, noMoreWords]);
 
+  // 비밀번호 제출(인증)
+  const handlePasswordSubmit = async (password: string) => {
+    try {
+      setErrorMessage("");
+      
+      const data = await getGameDetail(gameCode!, password);
+
+      setGameData({
+        ...data,
+      });
+      setIsVerified(true);
+
+    } catch (err) {
+      if (err instanceof Error) {
+        setErrorMessage(err.message || "조회에 실패했습니다.");
+      } else {
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
+      }
+    }
+  };
+
   // 단어 조회
   async function loadMoreWords() {
     if (isLoadingWords || noMoreWords) return;
@@ -125,7 +157,7 @@ export default function Play() {
         return;
       }
 
-      setWords(prev => [...(prev ?? []), ...batch.words]);
+      setWords(prev => [...prev, ...batch.words]);
 
     } finally {
       setIsLoadingWords(false);
@@ -152,9 +184,9 @@ export default function Play() {
   const { team: currentTeam, roundIdx } = calcCurrentTeamInfo();
   
   // 데이터 준비 안된 경우
-  if (!gameData || !currentTeam || !words || words.length === 0) {
-    return <p>게임 준비중...</p>;
-  }
+  // if (!gameData || !currentTeam || !words || words.length === 0) {
+  //   return <p>게임 준비중...</p>;
+  // }
 
   // 턴 시작
   const handleStartTurn = () => {
@@ -219,7 +251,7 @@ export default function Play() {
   
   // 정답
   const handleCorrect = () => {
-    if (!currentTurn || !words[wordIdx]) return;
+    if (!currentTurn || !words || !words[wordIdx]) return;
 
     setCurrentTurn(prev => ({
       ...prev!,
@@ -241,7 +273,7 @@ export default function Play() {
 
   // 패스
   const handlePass = () => {
-    if (!currentTurn || !words[wordIdx]) return;
+    if (!gameData || !currentTurn || !words || !words[wordIdx]) return;
     if (currentTurn.usedPass >= gameData.passLimit) {
       alert("패스 제한을 초과했습니다."); // TODO 토스트 알림
       return;
@@ -283,53 +315,60 @@ export default function Play() {
   return (
     <div className="play-container">
 
-      {/* --- 상단 정보 바 --- */}
-      <TurnInfoBar
-        mode={gameData.mode}
-        teamName={currentTeam.name}
-        roundIndex={roundIdx + 1}
-        correctCount={currentTurn?.correctCount ?? 0}
-        usedPass={currentTurn?.usedPass ?? 0}
-        passLimit={gameData.passLimit}
-        targetCount={gameData.targetCount ?? undefined}
-      />
+      {/* 인증 실패 시 비밀번호 입력 모달 */}
+      {!isVerified && <PasswordModal onSubmit={handlePasswordSubmit} errorMessage={errorMessage}/>}
 
-      {/* --- 타이머 --- */}
-      <Timer mode={gameData.mode} sec={timerSec} durationSec={gameData.durationSec} />
+      {gameData && currentTeam && (
+        <>
+          {/* --- 상단 정보 바 --- */}
+          <TurnInfoBar
+            mode={gameData.mode}
+            teamName={currentTeam.name}
+            roundIndex={roundIdx + 1}
+            correctCount={currentTurn?.correctCount ?? 0}
+            usedPass={currentTurn?.usedPass ?? 0}
+            passLimit={gameData.passLimit}
+            targetCount={gameData.targetCount ?? undefined}
+          />
 
-      {/* --- 제시어 --- */}
-      <WordCard
-        word={words[wordIdx]?.text ?? "단어 조회 실패"}
-        index={wordIdx + 1}
-        isVisible={isRunning}
-      />
+          {/* --- 타이머 --- */}
+          <Timer mode={gameData.mode} sec={timerSec} durationSec={gameData.durationSec} />
 
-      {/* --- 게임 컨트롤 패널 --- */}
-      <Controls
-        isRunning={isRunning}
-        canPass={(currentTurn?.usedPass ?? 0) < gameData.passLimit}
-        onStart={currentTurn ? handleRestartTurn : handleStartTurn}
-        onPause={handlePauseTurn}
-        onCorrect={handleCorrect}
-        onPass={handlePass}
-        onEndTurn={handleEndTurn}
-      />
+          {/* --- 제시어 --- */}
+          <WordCard
+            word={words[wordIdx]?.text ?? "단어 조회 실패"}
+            index={wordIdx + 1}
+            isVisible={isRunning}
+          />
 
-      {/* --- 턴 종료/최종 결과 모달 --- */}
-      {showModal && (
-        <RoundModal
-          type={modalType}
-          
-          currentTeam={currentTeam}
-          correctCount={currentTurn?.correctCount ?? 0}
-          usedPass={currentTurn?.usedPass ?? 0}
-          elapsedSec={timerSec}
-          onNext={modalType === "INTERMISSION" ? handleNextTurn : undefined}
+          {/* --- 게임 컨트롤 패널 --- */}
+          <Controls
+            isRunning={isRunning}
+            canPass={(currentTurn?.usedPass ?? 0) < gameData.passLimit}
+            onStart={currentTurn ? handleRestartTurn : handleStartTurn}
+            onPause={handlePauseTurn}
+            onCorrect={handleCorrect}
+            onPass={handlePass}
+            onEndTurn={handleEndTurn}
+          />
 
-          teams={modalType === "FINISHED" ? gameData.teams : undefined}
-          turns={modalType === "FINISHED" ? turns : undefined}
-          onSave={modalType === "FINISHED" ? handleFinishGame : undefined}
-        />
+          {/* --- 턴 종료/최종 결과 모달 --- */}
+          {showModal && (
+            <RoundModal
+              type={modalType}
+              
+              currentTeam={currentTeam}
+              correctCount={currentTurn?.correctCount ?? 0}
+              usedPass={currentTurn?.usedPass ?? 0}
+              elapsedSec={timerSec}
+              onNext={modalType === "INTERMISSION" ? handleNextTurn : undefined}
+
+              teams={modalType === "FINISHED" ? gameData.teams : undefined}
+              turns={modalType === "FINISHED" ? turns : undefined}
+              onSave={modalType === "FINISHED" ? handleFinishGame : undefined}
+            />
+          )}
+        </>
       )}
     </div>
   );

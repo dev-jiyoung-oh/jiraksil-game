@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "@/api/api";
-import type { GameMode, CreateGameResponse } from "@/types/charades";
+import { getCateories, createGame } from "@/api/charades";
+import type { GameMode } from "@/types/charades";
 
 export default function CharadesNew() {
   const navigate = useNavigate();
@@ -15,6 +15,8 @@ export default function CharadesNew() {
   const [passLimit, setPassLimit] = useState(2);
   const [roundsPerTeam, setRoundsPerTeam] = useState(3);
   const [teamNames, setTeamNames] = useState<string[]>([""]);
+  const [password, setPassword] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   
@@ -23,13 +25,15 @@ export default function CharadesNew() {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await api.get<{ code: string; name: string }[]>("/charades/categories");
+        const data = await getCateories();
         setCategories(data);
+        clearError();
       } catch (err) {
-        setError("카테고리 목록을 불러오지 못했습니다.");
-        console.error("카테고리 목록을 불러오지 못했습니다.", err);
+        setError("카테고리 목록을 불러오지 못했습니다. 잠시 후 시도해주세요.");
+        console.error("카테고리 목록을 불러오지 못했습니다.", err); // TODO 삭제
       }
     })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
     
   // ====== 헬퍼 ======
@@ -59,6 +63,11 @@ export default function CharadesNew() {
   const handleRoundsPerTeamChange = (value: number) => {
     clearError();
     setRoundsPerTeam(value);
+  };
+
+  const handlePasswordChange = (value: string) => {
+    clearError();
+    setPassword(value);
   };
 
   // ====== 리스트 조작 핸들러 ======
@@ -96,23 +105,29 @@ export default function CharadesNew() {
     e.preventDefault();
     clearError();
 
+    if (!password || password.length < 4) {
+      setError('비밀번호는 최소 4자리 이상이어야 합니다.');
+      return;
+    }
+
     try {
       setLoading(true);
 
-      const { data } = await api.post<CreateGameResponse>("/charades", {
-        options: {
-          mode,
-          durationSec,
-          targetCount,
-          passLimit,
-          roundsPerTeam,
-          categoryCodes: selectedCodes,
-        },
+      const data = await createGame({
+        mode,
+        durationSec,
+        targetCount,
+        passLimit,
+        roundsPerTeam,
+        password,
+        categoryCodes: selectedCodes,
         teamNames: teamNames.map((n, i) => n.trim() || `Team ${String.fromCharCode(65 + i)}`),
       });
 
       // 성공 시 게임 진행 페이지로 이동
-      navigate(`/game/charades/${data.code}`);
+      navigate(`/game/charades/${data.code}`, {
+        state: data,
+      });
 
     } catch (err) {
       if (err instanceof Error) {
@@ -302,6 +317,26 @@ export default function CharadesNew() {
             + 팀 추가
           </button>
         </fieldset>
+
+        <div className="form-group">
+          <label htmlFor="password" className="label-text">
+            비밀번호
+            <span aria-hidden="true" className="required">*</span>
+            <span className="sr-only">필수항목</span>
+          </label>
+          <small id="password-desc" className="font-gray">비밀번호는 관리화면에 접근할 때 필요합니다!</small>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            aria-describedby="password-desc"
+            value={password}
+            onChange={(e) => handlePasswordChange(e.target.value)}
+            required
+            minLength={4}
+            placeholder="4자리 이상"
+          />
+        </div>
 
         {/* 에러 메시지 */}
         {error && <p role="alert" className="font-danger">{error}</p>}
