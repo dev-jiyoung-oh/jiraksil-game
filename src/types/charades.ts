@@ -10,6 +10,7 @@ export type GameStatus =
     | "FINISHED";
 
 export type TurnAction = "CORRECT" | "PASS";
+
 export interface CharadesTeam {
     code: string;       // 팀 코드 (A, B, C...)
     name: string;       // 팀 이름
@@ -24,7 +25,35 @@ export interface CategoryDto {
     name: string;
 }
 
-export interface CharadesCurrent {
+export interface BaseTurn {
+    teamCode: string;
+    roundIndex: number;
+    correctCount: number;
+    usedPass: number;
+    elapsedSec: number;
+}
+
+export interface TurnDto extends BaseTurn {
+    code: string;
+    teamName: string;
+    playNo: number;
+}
+
+export interface WordDto {
+    id: number;
+    text: string;
+    description: string;
+}
+
+export interface TurnWordDto {
+    idx: number;
+    wordId?: number;
+    wordText: string;
+    action: TurnAction;
+    atSec: number;
+}
+
+export interface CurrentDto {
     teamIndex: number;  // 현재 진행 중인 팀 인덱스
     roundIndex: number; // 현재 라운드 인덱스
 }
@@ -49,45 +78,21 @@ export interface GameInfoResponse {
     roundsPerTeam: number;
     status: GameStatus;
     teams: CharadesTeam[];
-    current: CharadesCurrent;
-}
-
-export interface GameResultResponse {
-    code: string;
-    teams: CharadesTeam[];
-}
-
-export interface WordDto {
-    id: number;
-    text: string;
-    description: string;
+    current: CurrentDto;
 }
 
 export interface WordBatchResponse {
     words: WordDto[];
 }
 
-export interface TurnWordRequest {
-    idx: number;
-    wordId?: number;
-    wordText: string;
-    action: TurnAction;
-    atSec: number;
-}
-
-export interface FinalizeTurnRequest {
-    teamCode: string;
-    roundIndex: number;
-    correctCount: number;
-    usedPass: number;
-    elapsedSec: number;
+export interface FinalizeTurnRequest extends BaseTurn {
     startedAt: string;
     endedAt: string;
-    words: TurnWordRequest[];
+    words: TurnWordDto[];
 }
 
 export interface FinalizeGameRequest {
-  turns: FinalizeTurnRequest[];
+    turns: FinalizeTurnRequest[];
 }
 
 // ========== 프론트 전용 타입 ==========
@@ -98,6 +103,6 @@ export interface CharadesGameViewModel extends GameInfoResponse {
 
 export type CurrentTurn = Omit<FinalizeTurnRequest, "startedAt" | "endedAt">
 & {
-  startedAt: Date | null;
-  endedAt: Date | null;
+    startedAt: Date | null;
+    endedAt: Date | null;
 };
