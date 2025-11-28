@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import PasswordModal from '@/components/common/PasswordModal';
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import PasswordModal from "@/components/common/PasswordModal";
+import { toLocalDateTimeString } from "@/utils/date";
 
 import {
   getGameDetail,
@@ -9,7 +10,7 @@ import {
 } from "@/api/charades";
 
 import type {
-  GameInfoResponse,
+  GameInfoDto,
   WordDto,
   FinalizeTurnRequest,
   GameStatus,
@@ -31,10 +32,10 @@ export default function Play() {
   const navigate = useNavigate();
 
   /** 게임 생성 후 전달된 초기 데이터 (새로고침 시엔 존재 X) */
-  const initialData = location.state as GameInfoResponse | undefined;
+  const initialData = location.state as GameInfoDto | undefined;
 
   // 게임 상세 정보
-  const [gameData, setGameData] = useState<GameInfoResponse | null>(initialData ?? null);
+  const [gameData, setGameData] = useState<GameInfoDto | null>(initialData ?? null);
 
   // 인증 관련
   const [isVerified, setIsVerified] = useState(!!initialData || false);
@@ -52,6 +53,7 @@ export default function Play() {
   // 모달 상태
   const [modalType, setModalType] = useState<Extract<GameStatus,"INTERMISSION" | "FINISHED"> | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showSaveButton, setShowSaveButton] = useState(false);
   // 타이머 상태
   const [isRunning, setIsRunning] = useState(false);
   const [timerSec, setTimerSec] = useState(0);
@@ -64,7 +66,7 @@ export default function Play() {
     }
 
     if (!gameData) {
-      alert("잘못된 접근입니다. 새로고침 시 비밀번호 인증이 필요합니다.");
+      alert("비밀번호 인증이 필요합니다.");
       setIsVerified(false);
     }
 
@@ -230,8 +232,8 @@ export default function Play() {
 
     const finishedTurn: FinalizeTurnRequest = {
       ...currentTurn,
-      startedAt: currentTurn.startedAt!.toISOString(),
-      endedAt: ended.toISOString(),
+      startedAt: toLocalDateTimeString(currentTurn.startedAt),
+      endedAt: toLocalDateTimeString(ended),
       elapsedSec: timerSec,
     };
     
@@ -239,6 +241,7 @@ export default function Play() {
     setTurns(prev => [...prev, finishedTurn]);
 
     setModalType(freshIsLast ? "FINISHED" : "INTERMISSION");
+    setShowSaveButton(freshIsLast ?? false);
     setShowModal(true);
   };
 
@@ -305,7 +308,8 @@ export default function Play() {
       await finalizeGame(gameData.code, { turns });
       // TODO 동기 처리?
       // TODO 다시하기 기능 추가. 혹은 페이지 나가기? 혹은 관리화면으로 가기?
-      //alert("게임 결과 저장 완료!");
+      alert("게임 결과 저장 완료!");
+      setShowSaveButton(false);
     } catch {
       alert("결과 저장 중 오류 발생!");
     }
@@ -318,7 +322,7 @@ export default function Play() {
       {/* 인증 실패 시 비밀번호 입력 모달 */}
       {!isVerified && <PasswordModal onSubmit={handlePasswordSubmit} errorMessage={errorMessage}/>}
 
-      {gameData && currentTeam && (
+      {isVerified && gameData && currentTeam && (
         <>
           {/* --- 상단 정보 바 --- */}
           <TurnInfoBar
@@ -365,6 +369,7 @@ export default function Play() {
 
               teams={modalType === "FINISHED" ? gameData.teams : undefined}
               turns={modalType === "FINISHED" ? turns : undefined}
+              showSaveButton={showSaveButton}
               onSave={modalType === "FINISHED" ? handleFinishGame : undefined}
             />
           )}
