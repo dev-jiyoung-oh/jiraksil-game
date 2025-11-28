@@ -1,0 +1,11 @@
+.turn-info-bar {
+  display: flex;
+  justify-content: space-between;
+  
+  .turn-info-bar__group {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+}

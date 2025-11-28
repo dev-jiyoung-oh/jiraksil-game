@@ -1,0 +1,69 @@
+/* ----- 공통: 배경 ----- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+
+/* ----- 공통: 모달 박스 ----- */
+.round-modal {
+  background: #fff;
+  width: 320px;
+  padding: 26px 28px;
+  border-radius: 14px;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.25);
+  text-align: center;
+  animation: modalFade 0.25s ease-out;
+
+
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ----- 제목 ----- */
+.modal-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 18px;
+}
+
+/* ----- INTERMISSION: 정답/패스 요약 ----- */
+.intermission-stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 18px 0 26px;
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.label {
+  font-size: 14px;
+  color: #666;
+}
+
+
+/* ----- 반응형 ----- */
+@media (max-width: 400px) {
+  .round-modal {
+    width: 88%;
+    padding: 22px 20px;
+  }
+}

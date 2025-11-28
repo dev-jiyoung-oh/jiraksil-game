@@ -1,0 +1,71 @@
+.manage-container {
+  padding: 24px;
+}
+
+.manage-title {
+  margin-bottom: 24px;
+}
+
+.manage-contents section {
+  margin-bottom: 28px;
+}
+
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+
+.info-list .key {
+  font-weight: 600;
+  color: #555;
+}
+
+.info-list .value {
+  color: #222;
+}
+
+.team-list li {
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-chip {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: default;
+  user-select: none;
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  color: #888;
+}
+
+/* 선택된 카테고리 */
+.category-chip.selected { 
+  background-color: #007bff20;
+  border: 1px solid #007bff;
+  color: #0056c7;
+  font-weight: 600;
+}
+
+.btn.small {
+  padding: 4px 8px;
+  font-size: 12px;
+}
