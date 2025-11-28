@@ -13,7 +13,7 @@ export default function CharadesNew() {
   const [durationSec, setDurationSec] = useState(90);
   const [targetCount, setTargetCount] = useState(10);
   const [passLimit, setPassLimit] = useState(2);
-  const [roundsPerTeam, setRoundsPerTeam] = useState(3);
+  const [roundsPerTeam, setRoundsPerTeam] = useState(2);
   const [teamNames, setTeamNames] = useState<string[]>([""]);
   const [password, setPassword] = useState('');
 
@@ -235,32 +235,12 @@ export default function CharadesNew() {
         </fieldset>
 
         <div className="form-group">
-          <label htmlFor="passLimit" className="label-text">
-            패스 제한
-            <span aria-hidden="true" className="required">*</span>
-            <span className="sr-only">필수항목</span>
-          </label>
-          <small id="passLimit-desc" className="font-gray">0 ~ 10 개까지 가능합니다.</small>
-          <input
-            type="number"
-            id="passLimit"
-            name="passLimit"
-            aria-describedby="passLimit-desc"
-            value={passLimit}
-            min={0}
-            max={10}
-            onChange={(e) => handlePassLimitChange(Number(e.target.value))}
-            required
-          />
-        </div>
-
-        <div className="form-group">
           <label htmlFor="roundsPerTeam" className="label-text">
             팀별 라운드 수
             <span aria-hidden="true" className="required">*</span>
             <span className="sr-only">필수항목</span>
           </label>
-          <small id="roundsPerTeam-desc" className="font-gray">1 ~ 10 라운드까지 가능합니다.</small>
+          <small id="roundsPerTeam-desc" className="font-gray">각 팀당 1 ~ 10 라운드까지 플레이 가능합니다.</small>
           <input
             type="number"
             id="roundsPerTeam"
@@ -270,6 +250,26 @@ export default function CharadesNew() {
             min={1}
             max={10}
             onChange={(e) => handleRoundsPerTeamChange(Number(e.target.value))}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="passLimit" className="label-text">
+            라운드별 패스 제한
+            <span aria-hidden="true" className="required">*</span>
+            <span className="sr-only">필수항목</span>
+          </label>
+          <small id="passLimit-desc" className="font-gray">각 라운드당 0 ~ 10 개까지 사용 가능합니다.</small>
+          <input
+            type="number"
+            id="passLimit"
+            name="passLimit"
+            aria-describedby="passLimit-desc"
+            value={passLimit}
+            min={0}
+            max={10}
+            onChange={(e) => handlePassLimitChange(Number(e.target.value))}
             required
           />
         </div>
