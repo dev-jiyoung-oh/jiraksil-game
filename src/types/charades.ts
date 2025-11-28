@@ -31,6 +31,8 @@ export interface BaseTurn {
     correctCount: number;
     usedPass: number;
     elapsedSec: number;
+    startedAt: string;
+    endedAt: string;
 }
 
 export interface TurnDto extends BaseTurn {
@@ -69,7 +71,7 @@ export interface CreateGameRequest {
     password: string;
 }
 
-export interface GameInfoResponse {
+export interface GameInfoDto {
     code: string;
     mode: GameMode;
     durationSec: number | null;
@@ -78,7 +80,6 @@ export interface GameInfoResponse {
     roundsPerTeam: number;
     status: GameStatus;
     teams: CharadesTeam[];
-    current: CurrentDto;
 }
 
 export interface WordBatchResponse {
@@ -86,8 +87,6 @@ export interface WordBatchResponse {
 }
 
 export interface FinalizeTurnRequest extends BaseTurn {
-    startedAt: string;
-    endedAt: string;
     words: TurnWordDto[];
 }
 
@@ -95,9 +94,18 @@ export interface FinalizeGameRequest {
     turns: FinalizeTurnRequest[];
 }
 
+export interface GameManageResponse {
+    gameInfo: GameInfoDto;
+
+    categories: { categoryCode: string }[];
+    categoryMaster: CategoryDto[];
+
+    turns: TurnDto[];
+}
+
 // ========== 프론트 전용 타입 ==========
 
-export interface CharadesGameViewModel extends GameInfoResponse {
+export interface CharadesGameViewModel extends GameInfoDto {
     timer?: number;
 }
 
