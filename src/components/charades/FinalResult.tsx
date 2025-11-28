@@ -40,8 +40,8 @@ export default function FinalResult({ teams, turns, showSaveButton = false, onSa
               <th>순위</th>
               <th>팀명</th>
               <th>정답</th>
-              <th>걸린 시간(초)</th>
               <th>패스</th>
+              <th>걸린 시간(초)</th>
             </tr>
           </thead>
 
@@ -51,8 +51,8 @@ export default function FinalResult({ teams, turns, showSaveButton = false, onSa
                 <td className="rank">{team.rank}</td>
                 <td className="name">{team.teamName}</td>
                 <td className="score">{team.totalCorrect}</td>
-                <td className="time">{team.totalTime}</td>
                 <td className="pass">{team.totalPass}</td>
+                <td className="time">{team.totalTime}</td>
               </tr>
             ))}
           </tbody>

@@ -14,6 +14,7 @@ interface RoundModalProps {
   // FINISHED
   teams?: CharadesTeam[];
   turns?: FinalizeTurnRequest[];
+  showSaveButton?: boolean;
 
   onNext?: () => void;
   onSave?: () => void;
@@ -27,6 +28,7 @@ export default function RoundModal({
   elapsedSec,
   teams,
   turns,
+  showSaveButton,
   onNext,
   onSave,
 }: RoundModalProps) {
@@ -61,7 +63,7 @@ export default function RoundModal({
                 </tr>
                 {elapsedSec !== undefined && (
                   <tr>
-                    <th>걸린 시간</th>
+                    <th>걸린 시간(초)</th>
                     <td>{elapsedSec}</td>
                   </tr>
                 )}
@@ -80,7 +82,7 @@ export default function RoundModal({
             <FinalResult
               teams={teams}
               turns={turns}
-              showSaveButton={true}
+              showSaveButton={showSaveButton}
               onSave={onSave}
             />
           </section>
