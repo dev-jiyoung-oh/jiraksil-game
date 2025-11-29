@@ -2,14 +2,12 @@ import "./FinalResult.css";
 import type { CharadesTeam, BaseTurn } from "@/types/charades";
 import { computeResults } from "@/utils/charades/computeResults";
 
-interface Props {
+interface FinalResultProps {
   teams: CharadesTeam[];
   turns: BaseTurn[];
-  showSaveButton?: boolean;
-  onSave?: () => void;
 }
 
-export default function FinalResult({ teams, turns, showSaveButton = false, onSave }: Props) {
+export default function FinalResult({ teams, turns }: FinalResultProps) {
   const { winners, result } = computeResults(teams, turns);
 
   return (
@@ -58,15 +56,6 @@ export default function FinalResult({ teams, turns, showSaveButton = false, onSa
           </tbody>
         </table>
       </section>
-
-      {/* 결과 저장 섹션 */}
-      {showSaveButton && (
-        <footer>
-          <button type="button" className="btn modal-btn save" onClick={onSave}>
-            결과 저장
-          </button>
-        </footer>
-      )}
     </div>
   );
 }

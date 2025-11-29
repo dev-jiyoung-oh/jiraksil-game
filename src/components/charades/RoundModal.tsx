@@ -14,10 +14,12 @@ interface RoundModalProps {
   // FINISHED
   teams?: CharadesTeam[];
   turns?: FinalizeTurnRequest[];
-  showSaveButton?: boolean;
+  isSaved?: boolean;
 
   onNext?: () => void;
   onSave?: () => void;
+  onRestart?: () => void;
+  onGoManage?: () => void;
 }
 
 export default function RoundModal({
@@ -28,9 +30,11 @@ export default function RoundModal({
   elapsedSec,
   teams,
   turns,
-  showSaveButton,
+  isSaved,
   onNext,
   onSave,
+  onRestart,
+  onGoManage
 }: RoundModalProps) {
   if (!type) return null;
 
@@ -70,9 +74,11 @@ export default function RoundModal({
               </tbody>
             </table>
 
-            <button type="button" className="modal-btn" onClick={onNext}>
-              다음 턴 시작 ▶
-            </button>
+            {onNext && (
+              <button type="button" className="btn modal-btn" onClick={onNext}>
+                다음 턴 시작 ▶
+              </button>
+            )}
           </section>
         )}
 
@@ -82,9 +88,29 @@ export default function RoundModal({
             <FinalResult
               teams={teams}
               turns={turns}
-              showSaveButton={showSaveButton}
-              onSave={onSave}
             />
+
+            {/* 버튼 묶음 */}
+            <div className="result-actions">
+
+              {onSave && (
+                <button type="button" className="btn modal-btn save" onClick={onSave} disabled={isSaved}>
+                  {isSaved ? "저장 완료" : "결과 저장"}
+                </button>
+              )}
+
+              {onRestart && (
+                <button type="button" className="btn modal-btn restart" onClick={onRestart}>
+                  다시 하기
+                </button>
+              )}
+
+              {onGoManage && (
+                <button type="button" className="btn modal-btn manage" onClick={onGoManage}>
+                  관리 화면으로 이동
+                </button>
+              )}
+            </div>
           </section>
         )}
       </div>
