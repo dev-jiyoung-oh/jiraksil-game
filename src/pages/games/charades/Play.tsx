@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import PasswordModal from "@/components/common/PasswordModal";
 import { toLocalDateTimeString } from "@/utils/date";
@@ -57,6 +57,27 @@ export default function Play() {
   // 타이머 상태
   const [isRunning, setIsRunning] = useState(false);
   const [timerSec, setTimerSec] = useState(0);
+  // 현재 턴 정보 (팀/라운드/마지막 여부)
+  const currentInfo = useMemo(() => {
+    if (!gameData) return { team: null, roundIdx: 0, isLast: false };
+
+    const totalTeams = gameData.teams.length;
+    const turnIndex = turns.length;
+
+    const teamIdx = turnIndex % totalTeams;
+    const roundIdx = Math.floor(turnIndex / totalTeams);
+
+    // 라운드 최대값 제한 (마지막 턴 이후 라운드 증가 방지)
+    const maxRoundIdx = gameData.roundsPerTeam - 1;
+    const safeRoundIdx = Math.min(roundIdx, maxRoundIdx);
+
+    return {
+      team: gameData.teams[teamIdx],
+      roundIdx: safeRoundIdx,
+      isLast: safeRoundIdx === maxRoundIdx && teamIdx === totalTeams - 1,
+    };
+  }, [turns, gameData]);
+
 
   // 초기 로딩
   useEffect(() => {
@@ -166,34 +187,9 @@ export default function Play() {
     }
   }
 
-  // 현재 턴에서의 팀/라운드 계산
-  function calcCurrentTeamInfo() {
-    if (!gameData) return { team: null, roundIdx: 0 };
-
-    const totalTeams = gameData.teams.length;
-    const turnIndex = turns.length;
-
-    const teamIdx = turnIndex % totalTeams;
-    const roundIdx = Math.floor(turnIndex / totalTeams);
-
-    return {
-      team: gameData.teams[teamIdx],
-      roundIdx,
-      isLast: roundIdx === gameData.roundsPerTeam - 1 && teamIdx === totalTeams - 1,
-    };
-  }
-
-  const { team: currentTeam, roundIdx } = calcCurrentTeamInfo();
-  
-  // 데이터 준비 안된 경우
-  // if (!gameData || !currentTeam || !words || words.length === 0) {
-  //   return <p>게임 준비중...</p>;
-  // }
-
   // 턴 시작
   const handleStartTurn = () => {
-    // 최신 팀/라운드 다시 계산
-    const { team: freshTeam, roundIdx: freshRound } = calcCurrentTeamInfo();
+    const { team: freshTeam, roundIdx: freshRound } = currentInfo;
     if (!freshTeam) return;
 
     setCurrentTurn({
@@ -226,9 +222,10 @@ export default function Play() {
     if (!currentTurn?.startedAt) return;
 
     setIsRunning(false);
+
     const ended = new Date();
 
-    const { isLast: freshIsLast } = calcCurrentTeamInfo();
+    const { isLast: isLastTurn } = currentInfo;
 
     const finishedTurn: FinalizeTurnRequest = {
       ...currentTurn,
@@ -240,8 +237,8 @@ export default function Play() {
     // 누적 기록 push
     setTurns(prev => [...prev, finishedTurn]);
 
-    setModalType(freshIsLast ? "FINISHED" : "INTERMISSION");
-    setShowSaveButton(freshIsLast ?? false);
+    setModalType(isLastTurn ? "FINISHED" : "INTERMISSION");
+    setShowSaveButton(isLastTurn ?? false);
     setShowModal(true);
   };
 
@@ -254,7 +251,10 @@ export default function Play() {
   
   // 정답
   const handleCorrect = () => {
-    if (!currentTurn || !words || !words[wordIdx]) return;
+    if (!gameData || !currentTurn || !words || !words[wordIdx]) return;
+
+    // 정답 1 증가한 값 계산 (setState 비동기 대비)
+    const nextCorrect = currentTurn.correctCount + 1;
 
     setCurrentTurn(prev => ({
       ...prev!,
@@ -271,6 +271,23 @@ export default function Play() {
       ]
     }));
 
+    // UNTIL_CLEAR 모드 종료 조건 체크
+    if (gameData.mode === "UNTIL_CLEAR") {
+      const target = gameData.targetCount;
+      
+      if (target == null) {
+        console.error("UNTIL_CLEAR 모드인데 targetCount 없음!");
+        return;
+      }
+
+      if (nextCorrect >= target) {
+        // 턴 즉시 종료
+        handleEndTurn();
+        return;
+      }
+    }
+
+    // 다음 단어로 이동
     setWordIdx(i => i + 1);
   };
 
@@ -306,8 +323,7 @@ export default function Play() {
 
     try {
       await finalizeGame(gameData.code, { turns });
-      // TODO 동기 처리?
-      // TODO 다시하기 기능 추가. 혹은 페이지 나가기? 혹은 관리화면으로 가기?
+      // TODO 다시하기 기능 / 페이지 나가기 / 관리화면으로 가기
       alert("게임 결과 저장 완료!");
       setShowSaveButton(false);
     } catch {
@@ -315,6 +331,9 @@ export default function Play() {
     }
   };
 
+  // 현재 팀 정보
+  const currentTeam = gameData?.teams.find(t => t.code === currentTurn?.teamCode) || currentInfo.team;
+    
   // 렌더링
   return (
     <div className="play-container">
@@ -328,7 +347,7 @@ export default function Play() {
           <TurnInfoBar
             mode={gameData.mode}
             teamName={currentTeam.name}
-            roundIndex={roundIdx + 1}
+            roundIndex={currentInfo.roundIdx + 1}
             correctCount={currentTurn?.correctCount ?? 0}
             usedPass={currentTurn?.usedPass ?? 0}
             passLimit={gameData.passLimit}
