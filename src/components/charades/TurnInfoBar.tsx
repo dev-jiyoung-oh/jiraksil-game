@@ -36,7 +36,7 @@ export default function TurnInfoBar({
       {/* 팀 & 라운드 정보 */}
       <div className="turn-info-bar__group">
         <span className="turn-info-bar__team">{teamName}</span>
-        <span className="turn-info-bar__round">Round {roundIndex + 1}</span>
+        <span className="turn-info-bar__round">Round {roundIndex}</span>
       </div>
 
       {/* 정답 / 패스 */}
