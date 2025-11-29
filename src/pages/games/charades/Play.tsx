@@ -53,7 +53,7 @@ export default function Play() {
   // 모달 상태
   const [modalType, setModalType] = useState<Extract<GameStatus,"INTERMISSION" | "FINISHED"> | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [showSaveButton, setShowSaveButton] = useState(false);
+  const [isGameSaved, setIsGameSaved] = useState(false);
   // 타이머 상태
   const [isRunning, setIsRunning] = useState(false);
   const [timerSec, setTimerSec] = useState(0);
@@ -238,7 +238,6 @@ export default function Play() {
     setTurns(prev => [...prev, finishedTurn]);
 
     setModalType(isLastTurn ? "FINISHED" : "INTERMISSION");
-    setShowSaveButton(isLastTurn ?? false);
     setShowModal(true);
   };
 
@@ -323,12 +322,35 @@ export default function Play() {
 
     try {
       await finalizeGame(gameData.code, { turns });
-      // TODO 다시하기 기능 / 페이지 나가기 / 관리화면으로 가기
-      alert("게임 결과 저장 완료!");
-      setShowSaveButton(false);
+      alert("게임 결과 저장 완료!"); // TODO 토스트 팝업
+      setIsGameSaved(true);
     } catch {
       alert("결과 저장 중 오류 발생!");
     }
+  };
+
+  // 재시작
+  const handleRestart = () => {
+    // 현재 턴 중지
+    setIsRunning(false);
+
+    // 기록 초기화
+    setTurns([]);
+    setCurrentTurn(null);
+
+    // 모달/저장 관련 초기화
+    setShowModal(false);
+    setModalType(null);
+    setIsGameSaved(false);
+
+    // 타이머 초기화
+    setTimerSec(0);
+  };
+
+
+  // 관리 화면으로 이동
+  const handleGoManage = () => {
+    navigate(`/game/charades/${gameCode}/manage`);
   };
 
   // 현재 팀 정보
@@ -379,17 +401,19 @@ export default function Play() {
           {showModal && (
             <RoundModal
               type={modalType}
-              
+
               currentTeam={currentTeam}
               correctCount={currentTurn?.correctCount ?? 0}
               usedPass={currentTurn?.usedPass ?? 0}
               elapsedSec={timerSec}
               onNext={modalType === "INTERMISSION" ? handleNextTurn : undefined}
 
+              isSaved={isGameSaved}
               teams={modalType === "FINISHED" ? gameData.teams : undefined}
               turns={modalType === "FINISHED" ? turns : undefined}
-              showSaveButton={showSaveButton}
               onSave={modalType === "FINISHED" ? handleFinishGame : undefined}
+              onRestart={modalType === "FINISHED" ? handleRestart : undefined}
+              onGoManage={modalType === "FINISHED" ? handleGoManage : undefined}
             />
           )}
         </>
