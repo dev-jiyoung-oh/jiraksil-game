@@ -1,0 +1,101 @@
+/* 헤더 전체 */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1.2rem;
+  background: #ffffff;
+  border-bottom: 2px solid #e7e7e7;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.app-header a {
+  text-decoration: none;
+}
+
+/* 네비게이션 영역 */
+.header-nav {
+  display: flex;
+  align-items: center;
+}
+
+/* Menubar 기본 */
+.menubar {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 1rem;
+}
+
+/* 메뉴 Trigger 버튼 */
+.menu-trigger {
+  background: none;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #333;
+}
+
+.menu-trigger:hover,
+.menu-trigger:focus {
+  background: #f4f4f4;
+  outline: 2px solid #005fcc;
+  border-radius: 4px;
+}
+
+/* Submenu */
+.submenu {
+  position: absolute;
+  margin-top: 4px;
+  padding: 0.4rem 0;
+  list-style: none;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  z-index: 100;
+}
+
+.submenu li {
+  padding: 0;
+}
+
+.submenu a[role="menuitem"],
+.submenu-btn {
+  display: block;
+  padding: 0.6rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.submenu-btn {
+  width: 100%;
+}
+
+.submenu a:hover,
+.submenu-btn:hover,
+.submenu a:focus,
+.submenu-btn:focus {
+  background: #efefef;
+  outline: none;
+}
+
+a[role="menuitem"] {
+  width: auto;
+}
+
+/* 서브메뉴가 메뉴 오른쪽에 붙지 않고, li 아래에 자연스럽게 나오도록 */
+.menubar > li {
+  position: relative;
+}
