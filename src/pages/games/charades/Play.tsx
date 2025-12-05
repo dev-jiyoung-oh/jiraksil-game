@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import PasswordModal from "@/components/common/PasswordModal";
+import GameAccessModal from "@/components/common/GameAccessModal";
 import { toLocalDateTimeString } from "@/utils/date";
 
 import {
@@ -24,12 +24,14 @@ import TurnInfoBar from "@/components/charades/TurnInfoBar";
 import RoundModal from "@/components/charades/RoundModal";
 
 /**
- * 몸으로 말해요 - 게임 메인 진행 페이지
+ * 몸으로 말해요 - 게임 진행 페이지
  */
 export default function Play() {
   const { gameCode } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const hasCode = !!gameCode;
 
   /** 게임 생성 후 전달된 초기 데이터 (새로고침 시엔 존재 X) */
   const initialData = location.state as GameInfoDto | undefined;
@@ -81,19 +83,31 @@ export default function Play() {
 
   // 초기 로딩
   useEffect(() => {
+    if (initialData) {
+      // 게임 생성 후 / 인증 후
+      setGameData(initialData);
+      setIsVerified(true);
+      return;
+    }
+    
+    // URL 접근인데 state 없음 → 코드/비번 인증 필요
     if (!gameCode) {
-      alert("잘못된 접근입니다.");
-      navigate("/game/charades");
-    }
-
-    if (!gameData) {
-      alert("비밀번호 인증이 필요합니다.");
       setIsVerified(false);
+      return;
     }
-
-    loadMoreWords();
+    
+    // 코드만 있음 → 비번 인증 필요
+    setIsVerified(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [gameCode]);
+
+  // 인증 완료 후 데이터 로드
+  useEffect(() => {
+    if (isVerified && gameCode) {
+      loadMoreWords();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVerified, gameCode]);
 
   // 타이머 동작
   useEffect(() => {
@@ -139,21 +153,24 @@ export default function Play() {
     if (wordIdx < words.length) return;
 
     alert("단어가 더 이상 없어 게임을 종료합니다.");
-    handleEndTurn();
+    forceEndGame();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData, wordIdx, words, noMoreWords]);
 
-  // 비밀번호 제출(인증)
-  const handlePasswordSubmit = async (password: string) => {
+  // 인증 요청
+  const handleAccessSubmit = async (code: string, password: string) => {
+    setErrorMessage("");
+    
     try {
-      setErrorMessage("");
-      
-      const data = await getGameDetail(gameCode!, password);
+      const data = await getGameDetail(code, password);
 
-      setGameData({
-        ...data,
-      });
-      setIsVerified(true);
+      if (gameCode) {
+        setGameData(data);
+        setIsVerified(true);
+        loadMoreWords();
+      } else {
+        navigate(`/game/charades/play/${data.code}`, { replace: true, state: data });
+      }
 
     } catch (err) {
       if (err instanceof Error) {
@@ -166,13 +183,13 @@ export default function Play() {
 
   // 단어 조회
   async function loadMoreWords() {
-    if (isLoadingWords || noMoreWords) return;
+    if (isLoadingWords || !gameCode || noMoreWords) return;
 
     setIsLoadingWords(true);
 
     try {
       const exclude = words ? words.map(w => w.id) : undefined;
-      const batch = await getWordBatch(gameCode!, { exclude: exclude });
+      const batch = await getWordBatch(gameCode, { exclude: exclude });
 
       // TODO limit 미만으로 변경
       if (batch.words.length === 0) {
@@ -217,27 +234,43 @@ export default function Play() {
     setIsRunning(false);
   };
 
-  // 턴 종료
-  const handleEndTurn = () => {
-    if (!currentTurn?.startedAt) return;
+  // 턴 종료 객체 생성
+  const finalizeTurn = () => {
+    if (!currentTurn?.startedAt) return null;
 
     setIsRunning(false);
-
     const ended = new Date();
 
-    const { isLast: isLastTurn } = currentInfo;
-
-    const finishedTurn: FinalizeTurnRequest = {
+    return {
       ...currentTurn,
       startedAt: toLocalDateTimeString(currentTurn.startedAt),
       endedAt: toLocalDateTimeString(ended),
       elapsedSec: timerSec,
-    };
-    
-    // 누적 기록 push
-    setTurns(prev => [...prev, finishedTurn]);
+    } as FinalizeTurnRequest;
+  };
 
-    setModalType(isLastTurn ? "FINISHED" : "INTERMISSION");
+  // 턴 종료 (정상 종료)
+  const handleEndTurn = () => {
+    const currentTurn = finalizeTurn();
+    if (!currentTurn) return;
+
+    // 누적 기록 push
+    setTurns(prev => [...prev, currentTurn]);
+
+    const { isLast } = currentInfo;
+
+    setModalType(isLast ? "FINISHED" : "INTERMISSION");
+    setShowModal(true);
+  };
+
+  // 게임 강제 종료
+  const forceEndGame = () => {
+    const finishedTurn = finalizeTurn();
+    if (!finishedTurn) return;
+
+    setTurns(prev => [...prev, finishedTurn]);
+    
+    setModalType("FINISHED");
     setShowModal(true);
   };
 
@@ -317,7 +350,7 @@ export default function Play() {
   };
 
   // 게임 종료 저장
-  const handleFinishGame = async () => {
+  const handleSaveGame = async () => {
     if (!gameData) return;
 
     try {
@@ -329,8 +362,8 @@ export default function Play() {
     }
   };
 
-  // 재시작
-  const handleRestart = () => {
+  // 게임 재시작
+  const handleRestartGame = () => {
     // 현재 턴 중지
     setIsRunning(false);
 
@@ -350,7 +383,7 @@ export default function Play() {
 
   // 관리 화면으로 이동
   const handleGoManage = () => {
-    navigate(`/game/charades/${gameCode}/manage`);
+    navigate(`/game/charades/manage/${gameCode}`);
   };
 
   // 현재 팀 정보
@@ -360,8 +393,18 @@ export default function Play() {
   return (
     <div className="play-container">
 
-      {/* 인증 실패 시 비밀번호 입력 모달 */}
-      {!isVerified && <PasswordModal onSubmit={handlePasswordSubmit} errorMessage={errorMessage}/>}
+      {/* 인증 모달 */}
+      {!isVerified && (
+        <GameAccessModal
+          isOpen={!isVerified}
+          code={gameCode}
+          requireCode={!hasCode}
+          requirePassword={true}
+          onSubmit={handleAccessSubmit}
+          onClose={() => navigate(-1)}
+          errorMessage={errorMessage}
+        />
+      )}
 
       {isVerified && gameData && currentTeam && (
         <>
@@ -411,8 +454,8 @@ export default function Play() {
               isSaved={isGameSaved}
               teams={modalType === "FINISHED" ? gameData.teams : undefined}
               turns={modalType === "FINISHED" ? turns : undefined}
-              onSave={modalType === "FINISHED" ? handleFinishGame : undefined}
-              onRestart={modalType === "FINISHED" ? handleRestart : undefined}
+              onSave={modalType === "FINISHED" ? handleSaveGame : undefined}
+              onRestart={modalType === "FINISHED" ? handleRestartGame : undefined}
               onGoManage={modalType === "FINISHED" ? handleGoManage : undefined}
             />
           )}

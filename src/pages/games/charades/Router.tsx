@@ -9,8 +9,10 @@ export default function CharadesRouter() {
     <Routes>
       <Route index element={<New />} />
       <Route path="new" element={<New />} />
-      <Route path=":gameCode" element={<Play />} />
-      <Route path=":gameCode/manage" element={<Manage />} />
+      <Route path="play" element={<Play />} />
+      <Route path="play/:gameCode" element={<Play />} />
+      <Route path="manage" element={<Manage />} />
+      <Route path="manage/:gameCode" element={<Manage />} />
       <Route path="*" element={<Navigate to="/game/charades/new" replace />} />
     </Routes>
   );

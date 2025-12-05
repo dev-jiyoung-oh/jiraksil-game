@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { getCateories, createGame } from "@/api/charades";
 import type { GameMode } from "@/types/charades";
 
+/**
+ * 몸으로 말해요 - 게임 생성 페이지
+ */
 export default function CharadesNew() {
   const navigate = useNavigate();
 
@@ -28,9 +31,9 @@ export default function CharadesNew() {
         const data = await getCateories();
         setCategories(data);
         clearError();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setError("카테고리 목록을 불러오지 못했습니다. 잠시 후 시도해주세요.");
-        console.error("카테고리 목록을 불러오지 못했습니다.", err); // TODO 삭제
       }
     })();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,7 +128,7 @@ export default function CharadesNew() {
       });
 
       // 성공 시 게임 진행 페이지로 이동
-      navigate(`/game/charades/${data.code}`, {
+      navigate(`/game/charades/play/${data.code}`, {
         state: data,
       });
 

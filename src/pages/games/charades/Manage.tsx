@@ -1,40 +1,72 @@
-import { useParams } from "react-router-dom";
-import { useMemo, useState } from "react";
-import PasswordModal from "@/components/common/PasswordModal";
-import FinalResult from "@/components/charades/FinalResult";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { getGameManage } from "@/api/charades";
-import { GAME_MODE_LABEL, GAME_STATUS_LABEL } from "@/utils/charades/labels";
+import GameAccessModal from "@/components/common/GameAccessModal";
+import FinalResult from "@/components/charades/FinalResult";
+import { GAME_MODE_LABEL } from "@/utils/charades/labels";
 import { formatDateTime } from "@/utils/date";
 import type { GameManageResponse, TurnDto } from "@/types/charades";
 
 import "./Manage.css";
 
+/**
+ * 몸으로 말해요 - 게임 관리 페이지
+ */
 export default function Manage() {
   const { gameCode } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const hasCode = !!gameCode;
+  const initialData = location.state as GameManageResponse | undefined;
+
   // 게임 정보
   const [gameData, setGameData] = useState<GameManageResponse | null>(null);
+
   // 게임 턴 정보(플레이 번호로 그룹핑)
   const groupedTurns = useMemo(() => {
     if (!gameData?.turns) return [];
     return groupTurnsByPlayNo(gameData.turns);
   }, [gameData?.turns]);
+
   // 인증 관련
   const [isVerified, setIsVerified] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // 비밀번호 제출
-  const handlePasswordSubmit = async (password: string) => {
+
+  useEffect(() => {
+    if (initialData) {
+      setGameData(initialData);
+      setIsVerified(true);
+      return;
+    }
+
+    if (!gameCode) {
+      setIsVerified(false);
+      return;
+    }
+
+    setIsVerified(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameCode]);
+
+  // 인증 요청
+  const handleAccessSubmit = async (code: string, password: string) => {
     try {
       setErrorMessage("");
 
-      const data = await getGameManage(gameCode!, password);
+      const data = await getGameManage(code, password);
 
-      console.log('데이터!', data);
-      // TODO
-      if (data.gameInfo.code) {
+      if (gameCode) {
         setGameData(data);
         setIsVerified(true);
+      } else {
+        navigate(`/game/charades/manage/${data.gameInfo.code}`, {
+          replace: true,
+          state: data,
+        });
       }
+      
     } catch (err) {
       if (err instanceof Error) {
         setErrorMessage(err.message || "조회에 실패했습니다.");
@@ -70,9 +102,17 @@ export default function Manage() {
     <div className="manage-container">
       <h2 className="manage-title">몸으로 말해요 - 관리 화면</h2>
 
-      {/* 비밀번호 모달 */}
+      {/* 인증 모달 */}
       {!isVerified && (
-        <PasswordModal onSubmit={handlePasswordSubmit} errorMessage={errorMessage} />
+        <GameAccessModal
+          isOpen={!isVerified}
+          code={gameCode}
+          requireCode={!hasCode}
+          requirePassword={true}
+          onSubmit={handleAccessSubmit}
+          onClose={() => navigate(-1)}
+          errorMessage={errorMessage}
+        />
       )}
 
       {/* 인증 성공 후 메인 UI */}
@@ -116,10 +156,10 @@ export default function Manage() {
                 <span className="value">{gameData.gameInfo.roundsPerTeam}</span>
               </li>
 
-              <li>
+              {/* <li>
                 <span className="key">게임 상태</span>
                 <span className="value">{GAME_STATUS_LABEL[gameData.gameInfo.status]}</span>
-              </li>
+              </li> */}
             </ul>
           </section>
 
