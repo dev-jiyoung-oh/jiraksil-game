@@ -1,14 +1,13 @@
-import api from "@/api/api";
+import { createGame } from "@/api/wakeUpMission";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { WakeUpMissionGame } from '@/types/wakeUpMission';
-import { formatPhoneNumber } from '@/utils/phoneNumber';
+//import { formatPhoneNumber } from '@/utils/phoneNumber';
 import './New.css';
 
 export default function WakeUpMissionNew() {
   const [numPlayers, setNumPlayers] = useState(1);
-  const [wakeUpTime, setWakeUpTime] = useState('');
-  const [contacts, setContacts] = useState<string[]>([]);
+//  const [wakeUpTime, setWakeUpTime] = useState('');
+//  const [contacts, setContacts] = useState<string[]>([]);
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -21,15 +20,16 @@ export default function WakeUpMissionNew() {
     clearError();
     setNumPlayers(value);
   };
-
-  const handleWakeUpTimeChange = (value: string) => {
-    clearError();
-    setWakeUpTime(value);
-  };
   
   const handlePasswordChange = (value: string) => {
     clearError();
     setPassword(value);
+  };
+
+  /*
+  const handleWakeUpTimeChange = (value: string) => {
+    clearError();
+    setWakeUpTime(value);
   };
   
   const handleContactChange = (index: number, value: string) => {
@@ -48,6 +48,7 @@ export default function WakeUpMissionNew() {
     clearError();
     setContacts(prev => prev.filter((_, i) => i !== index));
   };
+  */
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,18 +62,15 @@ export default function WakeUpMissionNew() {
     try {
       setLoading(true);
 
-      const { data } = await api.post<WakeUpMissionGame>(
-        "/wake-up-mission",
-        {
+      const data = await createGame({
           numPlayers,
-          wakeUpTime,
-          contacts: contacts.filter((c) => c.trim()).join(","),
+          //wakeUpTime,
+          //contacts: contacts ? contacts.filter((c) => c.trim()).join(",") : null,
           password,
-        },
-      );
+        });
 
       // 생성된 게임 페이지로 이동
-      navigate(`/game/wake-up-mission/${data.code}`, {
+      navigate(`/game/wake-up-mission/play/${data.code}`, {
         state: data,
       });
 
@@ -91,7 +89,7 @@ export default function WakeUpMissionNew() {
     <main className="new-container">
       <h1 className="new-title">자네 지금 뭐 하는 건가 - 게임 생성</h1>
 
-      <div className="info-text" id="new-form-info">
+      {/* <div className="info-text" id="new-form-info">
         <p>ℹ️ 기상 시간과 연락처는 선택사항입니다.</p>
         <p>입력하시면 해당 시간에 카카오톡 메시지로 <strong>랜덤 기상 집합 장소</strong>가 전송됩니다.</p>
         <p>
@@ -100,7 +98,7 @@ export default function WakeUpMissionNew() {
             이미 지난 시간이면 내일 알림이 전송됩니다.
           </strong>
         </p>
-      </div>
+      </div> */}
 
       <form className="new-form" onSubmit={handleSubmit} aria-labelledby="new-form-info">
         
@@ -124,7 +122,7 @@ export default function WakeUpMissionNew() {
           />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="wakeUpTime" className="label-text">기상 시간</label>
           <small id="wakeUpTime-desc" className="font-gray">설정한 시간이 아직 지나지 않았다면 오늘, 지났다면 내일 카카오톡 알림이 발송됩니다.</small>
           <input
@@ -169,7 +167,7 @@ export default function WakeUpMissionNew() {
           >
             + 연락처 추가
           </button>
-        </fieldset>
+        </fieldset> */}
 
         <div className="form-group">
           <label htmlFor="password" className="label-text">

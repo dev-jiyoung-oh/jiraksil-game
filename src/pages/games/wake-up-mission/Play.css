@@ -1,4 +1,4 @@
-.cards-container {
+.play-container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -7,11 +7,11 @@
   max-width: 800px;
 }
 
-.cards-title {
+.play-container title {
   font-size: 1.8rem;
 }
-
-.cards-list {
+/* 
+.card-list {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -37,4 +37,4 @@
 .card-placeholder {
   font-size: 0.85rem;
   color: #888;
-}
+} */
