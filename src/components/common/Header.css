@@ -46,14 +46,12 @@
 .menu-trigger:hover,
 .menu-trigger:focus {
   background: #f4f4f4;
-  outline: 2px solid #005fcc;
   border-radius: 4px;
 }
 
 /* Submenu */
 .submenu {
   position: absolute;
-  margin-top: 4px;
   padding: 0.4rem 0;
   list-style: none;
   background: white;
@@ -95,7 +93,6 @@ a[role="menuitem"] {
   width: auto;
 }
 
-/* 서브메뉴가 메뉴 오른쪽에 붙지 않고, li 아래에 자연스럽게 나오도록 */
 .menubar > li {
   position: relative;
 }
