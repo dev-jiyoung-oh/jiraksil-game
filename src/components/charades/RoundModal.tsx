@@ -75,7 +75,7 @@ export default function RoundModal({
             </table>
 
             {onNext && (
-              <button type="button" className="btn modal-btn" onClick={onNext}>
+              <button type="button" className="btn btn-primary" onClick={onNext}>
                 다음 턴 시작 ▶
               </button>
             )}
@@ -84,7 +84,7 @@ export default function RoundModal({
 
         {/* --- 최종 결과(FINISHED) --- */}
         {isFinished && teams && turns && (
-          <section className="finished-section">
+          <section className="finished-section flex-column">
             <FinalResult
               teams={teams}
               turns={turns}
@@ -94,7 +94,7 @@ export default function RoundModal({
             <div className="result-actions">
 
               {onSave && (
-                <button type="button" className="btn modal-btn save" onClick={onSave} disabled={isSaved}>
+                <button type="button" className="btn btn-primary modal-btn save" onClick={onSave} disabled={isSaved}>
                   {isSaved ? "저장 완료" : "결과 저장"}
                 </button>
               )}
@@ -106,8 +106,8 @@ export default function RoundModal({
               )}
 
               {onGoManage && (
-                <button type="button" className="btn modal-btn manage" onClick={onGoManage}>
-                  관리 화면으로 이동
+                <button type="button" className="btn btn-success modal-btn manage" onClick={onGoManage}>
+                  관리 화면<br />으로 이동
                 </button>
               )}
             </div>
