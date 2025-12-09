@@ -1,6 +1,7 @@
-import "./FinalResult.css";
 import type { CharadesTeam, BaseTurn } from "@/types/charades";
 import { computeResults } from "@/utils/charades/computeResults";
+
+import "./FinalResult.css";
 
 interface FinalResultProps {
   teams: CharadesTeam[];
@@ -8,29 +9,14 @@ interface FinalResultProps {
 }
 
 export default function FinalResult({ teams, turns }: FinalResultProps) {
-  const { winners, result } = computeResults(teams, turns);
+  const { result } = computeResults(teams, turns);
 
   return (
     <div className="final-result-container flex-column">
-      
-      {/* 우승 섹션 */}
-      <section className="winner-section">
-        <h3 className="title">
-          🏆 {winners.length > 1 ? "공동 우승 팀" : "우승 팀"} 🏆
-        </h3>
-
-        <ul className="list">
-          {winners.map(w => (
-            <li key={w.teamCode} className="item is-winner">
-              <span className="team-name">{w.teamName}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
 
       {/* 최종 순위 섹션 */}
       <section className="result-section">
-        <h4 className="title">최종 순위</h4>
+        <h4 className="title sr-only">최종 순위</h4>
 
         <table className="score-table">
           <thead>
