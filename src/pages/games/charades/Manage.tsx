@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { getGameManage } from "@/api/charades";
+import CopyButton from "@/components/common/CopyButton";
 import GameAccessModal from "@/components/common/GameAccessModal";
 import FinalResult from "@/components/charades/FinalResult";
 import { GAME_MODE_LABEL } from "@/utils/charades/labels";
@@ -120,53 +121,56 @@ export default function Manage() {
         <main className="manage-contents">
 
           {/* 게임 정보 */}
-          <section className="game-info-section">
-            <h3>게임 정보</h3>
+          <section className="manage-section game-info-section">
+            <h3 className="section-title">게임 정보</h3>
             <ul className="info-list">
-              <li>
-                <span className="key">게임 코드</span>
-                <span className="value">{gameData.gameInfo.code}</span>
+              <li className="info-item">
+                <span className="info-label">게임 코드</span>
+                <div className="info-row">
+                  <span className="info-value">{gameData.gameInfo.code}</span>
+                  <CopyButton text={gameData.gameInfo.code} />
+                </div>
               </li>
-              <li>
-                <span className="key">모드</span>
-                <span className="value">{GAME_MODE_LABEL[gameData.gameInfo.mode]}</span>
+              <li className="info-item">
+                <span className="info-label">모드</span>
+                <span className="info-value">{GAME_MODE_LABEL[gameData.gameInfo.mode]}</span>
               </li>
               
               {gameData.gameInfo.mode === "LIMITED" && (
-                <li>
-                  <span className="key">제한 시간</span>
-                  <span className="value">{gameData.gameInfo.durationSec}초</span>
+                <li className="info-item">
+                  <span className="info-label">제한 시간</span>
+                  <span className="info-value">{gameData.gameInfo.durationSec}초</span>
                 </li>
               )}
 
               {gameData.gameInfo.mode === "UNTIL_CLEAR" && (
-                <li>
-                  <span className="key">목표 정답 수</span>
-                  <span className="value">{gameData.gameInfo.targetCount}</span>
+                <li className="info-item">
+                  <span className="info-label">목표 정답 수</span>
+                  <span className="info-value">{gameData.gameInfo.targetCount}</span>
                 </li>
               )}
 
-              <li>
-                <span className="key">패스 제한</span>
-                <span className="value">{gameData.gameInfo.passLimit}</span>
+              <li className="info-item">
+                <span className="info-label">패스 제한</span>
+                <span className="info-value">{gameData.gameInfo.passLimit}</span>
               </li>
 
-              <li>
-                <span className="key">팀당 라운드 수</span>
-                <span className="value">{gameData.gameInfo.roundsPerTeam}</span>
+              <li className="info-item">
+                <span className="info-label">팀당 라운드 수</span>
+                <span className="info-value">{gameData.gameInfo.roundsPerTeam}</span>
               </li>
 
-              {/* <li>
-                <span className="key">게임 상태</span>
-                <span className="value">{GAME_STATUS_LABEL[gameData.gameInfo.status]}</span>
+              {/* <li className="info-item">
+                <span className="info-label">게임 상태</span>
+                <span className="info-value">{GAME_STATUS_LABEL[gameData.gameInfo.status]}</span>
               </li> */}
             </ul>
           </section>
 
 
           {/* 카테고리 */}
-          <section className="category-section">
-            <h3>카테고리</h3>
+          <section className="manage-section category-section">
+            <h3 className="section-title">카테고리</h3>
             <ul className="category-list">
               {gameData.categoryMaster.map((cat) => {
                 const isSelected = gameData.categories.some(
@@ -186,8 +190,8 @@ export default function Manage() {
           </section>
 
           {/* 팀 목록 */}
-          <section className="team-section">
-            <h3>참여 팀</h3>
+          <section className="manage-section team-section">
+            <h3 className="section-title">참여 팀</h3>
             <ul className="team-list">
               {gameData.gameInfo.teams.map((t) => (
                 <li key={t.code} style={{ borderLeft: `8px solid ${t.colorHex}` }}>
@@ -198,8 +202,8 @@ export default function Manage() {
           </section>
 
           {/* 플레이 기록 */}
-          <section className="play-section">
-            <h3>플레이 기록</h3>
+          <section className="manage-section play-section">
+            <h3 className="section-title">플레이 기록</h3>
 
             {groupedTurns.map(({ playNo, turns }) => {
               const startedAt = turns[0].startedAt;

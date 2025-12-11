@@ -1,0 +1,8 @@
+.code-copy-box {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 0.9rem;
+  align-items: center;
+  color: #555;
+}

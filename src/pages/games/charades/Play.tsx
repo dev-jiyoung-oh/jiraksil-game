@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+import CopyButton from "@/components/common/CopyButton";
 import GameAccessModal from "@/components/common/GameAccessModal";
 import { toLocalDateTimeString } from "@/utils/date";
 
@@ -22,6 +23,8 @@ import WordCard from "@/components/charades/WordCard";
 import Controls from "@/components/charades/Controls";
 import TurnInfoBar from "@/components/charades/TurnInfoBar";
 import RoundModal from "@/components/charades/RoundModal";
+
+import "./Play.css";
 
 /**
  * 몸으로 말해요 - 게임 진행 페이지
@@ -408,6 +411,12 @@ export default function Play() {
 
       {isVerified && gameData && currentTeam && (
         <>
+          {/* --- 게임 코드 복사 --- */}
+          <div className="code-copy-box">
+            <span className="code">게임 코드: {gameData.code}</span>
+            <CopyButton text={gameData.code} />
+          </div>
+
           {/* --- 상단 정보 바 --- */}
           <TurnInfoBar
             mode={gameData.mode}
