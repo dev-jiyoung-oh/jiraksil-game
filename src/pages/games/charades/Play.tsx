@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import CopyButton from "@/components/common/CopyButton";
 import GameAccessModal from "@/components/common/GameAccessModal";
@@ -36,7 +36,7 @@ export default function Play() {
 
   const hasCode = !!gameCode;
 
-  /** 게임 생성 후 전달된 초기 데이터 (새로고침 시엔 존재 X) */
+  // 게임 생성 후 전달된 초기 데이터 (새로고침 시엔 존재 X)
   const initialData = location.state as GameInfoDto | undefined;
 
   // 게임 상세 정보
@@ -51,17 +51,32 @@ export default function Play() {
   const [noMoreWords, setNoMoreWords] = useState(false);
   const [isLoadingWords, setIsLoadingWords] = useState(false);
   const [wordIdx, setWordIdx] = useState(0);
+
   // 현재 턴 정보
-  const [currentTurn, setCurrentTurn] = useState<CurrentTurn | null>(null);
+  const [currentTurn, setCurrentTurn] = useState<(CurrentTurn & { turnIndex: number }) | null>(null);
+
   // 전체 턴 기록(누적)
   const [turns, setTurns] = useState<FinalizeTurnRequest[]>([]);
+
   // 모달 상태
-  const [modalType, setModalType] = useState<Extract<GameStatus,"INTERMISSION" | "FINISHED"> | null>(null);
+  const [modalType, setModalType] = useState<Extract<GameStatus, "INTERMISSION" | "FINISHED"> | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [isGameSaved, setIsGameSaved] = useState(false);
+
   // 타이머 상태
   const [isRunning, setIsRunning] = useState(false);
   const [timerSec, setTimerSec] = useState(0);
+
+  // 최신 state 보관용 Ref - interval 내부에서 stale 문제 방지
+  const currentTurnRef = useRef(currentTurn);
+  const gameDataRef = useRef(gameData);
+  useEffect(() => {
+    currentTurnRef.current = currentTurn;
+  }, [currentTurn]);
+  useEffect(() => {
+    gameDataRef.current = gameData;
+  }, [gameData]);
+
   // 현재 턴 정보 (팀/라운드/마지막 여부)
   const currentInfo = useMemo(() => {
     if (!gameData) return { team: null, roundIdx: 0, isLast: false };
@@ -83,8 +98,7 @@ export default function Play() {
     };
   }, [turns, gameData]);
 
-
-  // 초기 로딩
+  // 초기 로딩 및 인증 처리
   useEffect(() => {
     if (initialData) {
       // 게임 생성 후 / 인증 후
@@ -114,15 +128,20 @@ export default function Play() {
 
   // 타이머 동작
   useEffect(() => {
-    if (!isRunning || !currentTurn) return;
+    if (!isRunning) return;
 
     const id = setInterval(() => {
       setTimerSec(sec => {
         const next = sec + 1;
 
-        // LIMITED 자동 종료 감지
-        if (gameData?.mode === "LIMITED") {
-          const duration = gameData.durationSec ?? 0;
+        const current = currentTurnRef.current;
+        const g = gameDataRef.current;
+
+        if (!current) return next;
+
+        // LIMITED 자동 종료 체크
+        if (g?.mode === "LIMITED") {
+          const duration = g.durationSec ?? 0;
 
           if (next >= duration) {
             clearInterval(id);
@@ -137,12 +156,11 @@ export default function Play() {
 
     return () => clearInterval(id);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRunning, currentTurn, gameData]);
+  }, [isRunning]);
 
   // 단어 부족 시 자동 로딩
   useEffect(() => {
-    if (!words) return;
-    if (noMoreWords) return;
+    if (!words || noMoreWords) return;
     if (wordIdx < words.length - 50) return;
 
     loadMoreWords();
@@ -151,8 +169,7 @@ export default function Play() {
 
   // 서버 단어 고갈 시 게임 종료
   useEffect(() => {
-    if (!gameData || !words) return;
-    if (!noMoreWords) return;
+    if (!gameData || !words || !noMoreWords) return;
     if (wordIdx < words.length) return;
 
     alert("단어가 더 이상 없어 게임을 종료합니다.");
@@ -172,7 +189,10 @@ export default function Play() {
         setIsVerified(true);
         loadMoreWords();
       } else {
-        navigate(`/game/charades/play/${data.code}`, { replace: true, state: data });
+        navigate(`/game/charades/play/${data.code}`, {
+          replace: true,
+          state: data,
+        });
       }
 
     } catch (err) {
@@ -212,6 +232,8 @@ export default function Play() {
     const { team: freshTeam, roundIdx: freshRound } = currentInfo;
     if (!freshTeam) return;
 
+    const turnIndex = turns.length;
+
     setCurrentTurn({
       teamCode: freshTeam.code,
       roundIndex: freshRound,
@@ -221,8 +243,9 @@ export default function Play() {
       startedAt: new Date(),
       endedAt: null,
       words: [],
+      turnIndex,
     });
-    
+
     setTimerSec(0);
     setIsRunning(true);
   };
@@ -244,8 +267,11 @@ export default function Play() {
     setIsRunning(false);
     const ended = new Date();
 
+    const { turnIndex, ...validTurn } = currentTurn;
+    void turnIndex;
+
     return {
-      ...currentTurn,
+      ...validTurn,
       startedAt: toLocalDateTimeString(currentTurn.startedAt),
       endedAt: toLocalDateTimeString(ended),
       elapsedSec: timerSec,
@@ -254,25 +280,34 @@ export default function Play() {
 
   // 턴 종료 (정상 종료)
   const handleEndTurn = () => {
-    const currentTurn = finalizeTurn();
-    if (!currentTurn) return;
+    const finished = finalizeTurn();
+    if (!finished || !currentTurn) return;
 
-    // 누적 기록 push
-    setTurns(prev => [...prev, currentTurn]);
+    const idx = currentTurn.turnIndex;
 
-    const { isLast } = currentInfo;
+    setTurns((prev) => {
+      const next = [...prev];
+      next[idx] = finished;
+      return next;
+    });
 
-    setModalType(isLast ? "FINISHED" : "INTERMISSION");
+    setModalType(currentInfo.isLast ? "FINISHED" : "INTERMISSION");
     setShowModal(true);
   };
 
   // 게임 강제 종료
   const forceEndGame = () => {
-    const finishedTurn = finalizeTurn();
-    if (!finishedTurn) return;
+    const finished = finalizeTurn();
+    if (!finished || !currentTurn) return;
 
-    setTurns(prev => [...prev, finishedTurn]);
-    
+    const idx = currentTurn.turnIndex;
+
+    setTurns((prev) => {
+      const next = [...prev];
+      next[idx] = finished;
+      return next;
+    });
+
     setModalType("FINISHED");
     setShowModal(true);
   };
@@ -286,14 +321,13 @@ export default function Play() {
   
   // 정답
   const handleCorrect = () => {
-    if (!gameData || !currentTurn || !words || !words[wordIdx]) return;
+    if (!gameData || !currentTurn || !words[wordIdx]) return;
 
-    // 정답 1 증가한 값 계산 (setState 비동기 대비)
     const nextCorrect = currentTurn.correctCount + 1;
 
     setCurrentTurn(prev => ({
       ...prev!,
-      correctCount: prev!.correctCount + 1,
+      correctCount: nextCorrect,
       words: [
         ...prev!.words,
         {
@@ -309,13 +343,7 @@ export default function Play() {
     // UNTIL_CLEAR 모드 종료 조건 체크
     if (gameData.mode === "UNTIL_CLEAR") {
       const target = gameData.targetCount;
-      
-      if (target == null) {
-        console.error("UNTIL_CLEAR 모드인데 targetCount 없음!");
-        return;
-      }
-
-      if (nextCorrect >= target) {
+      if (target != null && nextCorrect >= target) {
         // 턴 즉시 종료
         handleEndTurn();
         return;
@@ -328,7 +356,7 @@ export default function Play() {
 
   // 패스
   const handlePass = () => {
-    if (!gameData || !currentTurn || !words || !words[wordIdx]) return;
+    if (!gameData || !currentTurn || !words[wordIdx]) return;
     if (currentTurn.usedPass >= gameData.passLimit) {
       alert("패스 제한을 초과했습니다."); // TODO 토스트 알림
       return;
@@ -429,7 +457,11 @@ export default function Play() {
           />
 
           {/* --- 타이머 --- */}
-          <Timer mode={gameData.mode} sec={timerSec} durationSec={gameData.durationSec} />
+          <Timer
+            mode={gameData.mode}
+            sec={timerSec}
+            durationSec={gameData.durationSec}
+          />
 
           {/* --- 제시어 --- */}
           <WordCard
@@ -441,7 +473,9 @@ export default function Play() {
           {/* --- 게임 컨트롤 패널 --- */}
           <Controls
             isRunning={isRunning}
-            canPass={(currentTurn?.usedPass ?? 0) < gameData.passLimit}
+            canPass={
+              (currentTurn?.usedPass ?? 0) < gameData.passLimit
+            }
             onStart={currentTurn ? handleRestartTurn : handleStartTurn}
             onPause={handlePauseTurn}
             onCorrect={handleCorrect}
@@ -464,8 +498,12 @@ export default function Play() {
               teams={modalType === "FINISHED" ? gameData.teams : undefined}
               turns={modalType === "FINISHED" ? turns : undefined}
               onSave={modalType === "FINISHED" ? handleSaveGame : undefined}
-              onRestart={modalType === "FINISHED" ? handleRestartGame : undefined}
-              onGoManage={modalType === "FINISHED" ? handleGoManage : undefined}
+              onRestart={
+                modalType === "FINISHED" ? handleRestartGame : undefined
+              }
+              onGoManage={
+                modalType === "FINISHED" ? handleGoManage : undefined
+              }
             />
           )}
         </>
