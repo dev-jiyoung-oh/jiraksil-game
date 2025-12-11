@@ -77,6 +77,15 @@ export default function Manage() {
     }
   };
 
+  // 플레이 화면으로 이동
+  function handleGoPlay() {
+    if (!gameCode || !gameData?.gameInfo) return;
+
+    navigate(`/game/charades/play/${gameCode}`, {
+      state: gameData.gameInfo,
+    });
+  }
+
   // 턴 플레이 번호(playNo)로 그룹화
   function groupTurnsByPlayNo(turns: TurnDto[]) {
     const map = new Map<number, TurnDto[]>();
@@ -101,7 +110,6 @@ export default function Manage() {
   // 렌더링
   return (
     <div className="manage-container">
-      <h2 className="manage-title">몸으로 말해요 - 관리 화면</h2>
 
       {/* 인증 모달 */}
       {!isVerified && (
@@ -120,10 +128,25 @@ export default function Manage() {
       {isVerified && gameData && (
         <main className="manage-contents">
 
+          <h2 className="manage-title">몸으로 말해요 - 관리 화면</h2>
+
           {/* 게임 정보 */}
           <section className="manage-section game-info-section">
-            <h3 className="section-title">게임 정보</h3>
-            <ul className="info-list">
+            <header className="game-info-header">
+              <div className="header-left">
+                <h3 className="section-title">게임 정보</h3>
+              </div>
+              <div className="header-right">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleGoPlay}
+                >
+                  플레이 화면으로 이동
+                </button>
+              </div>
+            </header>
+            <ul className="game-info-list">
               <li className="info-item">
                 <span className="info-label">게임 코드</span>
                 <div className="info-row">
@@ -131,11 +154,12 @@ export default function Manage() {
                   <CopyButton text={gameData.gameInfo.code} />
                 </div>
               </li>
+
               <li className="info-item">
                 <span className="info-label">모드</span>
                 <span className="info-value">{GAME_MODE_LABEL[gameData.gameInfo.mode]}</span>
               </li>
-              
+
               {gameData.gameInfo.mode === "LIMITED" && (
                 <li className="info-item">
                   <span className="info-label">제한 시간</span>

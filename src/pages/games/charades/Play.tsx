@@ -439,49 +439,72 @@ export default function Play() {
 
       {isVerified && gameData && currentTeam && (
         <>
-          {/* --- 게임 코드 복사 --- */}
-          <div className="code-copy-box">
-            <span className="code">게임 코드: {gameData.code}</span>
-            <CopyButton text={gameData.code} />
-          </div>
+          <main className="play-contents">
+            <h2 className="play-title sr-only">몸으로 말해요 - 플레이 화면</h2>
 
-          {/* --- 상단 정보 바 --- */}
-          <TurnInfoBar
-            mode={gameData.mode}
-            teamName={currentTeam.name}
-            roundIndex={currentInfo.roundIdx + 1}
-            correctCount={currentTurn?.correctCount ?? 0}
-            usedPass={currentTurn?.usedPass ?? 0}
-            passLimit={gameData.passLimit}
-            targetCount={gameData.targetCount ?? undefined}
-          />
+            <section className="play-section toolbar-section">
+              <h3 className="sr-only">상단 영역</h3>
+              <div className="toolbar-left">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleGoManage}
+                >
+                  관리 화면으로 이동
+                </button>
+              </div>
+              <div className="toolbar-right">
+                <span className="code">게임 코드: {gameData.code}</span>
+                <CopyButton text={gameData.code} />
+              </div>
+            </section>
 
-          {/* --- 타이머 --- */}
-          <Timer
-            mode={gameData.mode}
-            sec={timerSec}
-            durationSec={gameData.durationSec}
-          />
+            <section className="play-section turn-info-section">
+              <h3 className="sr-only">현재 진행 상황</h3>
+              <TurnInfoBar
+                mode={gameData.mode}
+                teamName={currentTeam.name}
+                roundIndex={currentInfo.roundIdx + 1}
+                correctCount={currentTurn?.correctCount ?? 0}
+                usedPass={currentTurn?.usedPass ?? 0}
+                passLimit={gameData.passLimit}
+                targetCount={gameData.targetCount ?? undefined}
+              />
+            </section>
 
-          {/* --- 제시어 --- */}
-          <WordCard
-            word={words[wordIdx]?.text ?? "단어 조회 실패"}
-            index={wordIdx + 1}
-            isVisible={isRunning}
-          />
+            <section className="play-section timer-section">
+              <h3 className="sr-only">타이머</h3>
+              <Timer
+                mode={gameData.mode}
+                sec={timerSec}
+                durationSec={gameData.durationSec}
+              />
+            </section>
 
-          {/* --- 게임 컨트롤 패널 --- */}
-          <Controls
-            isRunning={isRunning}
-            canPass={
-              (currentTurn?.usedPass ?? 0) < gameData.passLimit
-            }
-            onStart={currentTurn ? handleRestartTurn : handleStartTurn}
-            onPause={handlePauseTurn}
-            onCorrect={handleCorrect}
-            onPass={handlePass}
-            onEndTurn={handleEndTurn}
-          />
+            <section className="play-section word-section">
+              <h3 className="sr-only">제시어</h3>
+              <WordCard
+                word={words[wordIdx]?.text ?? "단어 조회 실패"}
+                index={wordIdx + 1}
+                isVisible={isRunning}
+              />
+            </section>
+
+            <section className="play-section control-section">
+              <h3 className="sr-only">게임 컨트롤 패널</h3>
+              <Controls
+                isRunning={isRunning}
+                canPass={
+                  (currentTurn?.usedPass ?? 0) < gameData.passLimit
+                }
+                onStart={currentTurn ? handleRestartTurn : handleStartTurn}
+                onPause={handlePauseTurn}
+                onCorrect={handleCorrect}
+                onPass={handlePass}
+                onEndTurn={handleEndTurn}
+              />
+            </section>
+          </main>
 
           {/* --- 턴 종료/최종 결과 모달 --- */}
           {showModal && (
