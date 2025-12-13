@@ -132,7 +132,7 @@ export default function Manage() {
             </div>
           )}
 
-          <button type="button" className="btn toggle-all-cards" onClick={toggleAll}>
+          <button type="button" className="btn btn-primary" onClick={toggleAll}>
             {gameData.missions.every((m) => m.opened) ? '모든 카드 닫기' : '모든 카드 열기'}
           </button>
 
