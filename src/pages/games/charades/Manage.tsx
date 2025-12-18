@@ -197,8 +197,8 @@ export default function Manage() {
             <h3 className="section-title">카테고리</h3>
             <ul className="category-list">
               {gameData.categoryMaster.map((cat) => {
-                const isSelected = gameData.categories.some(
-                  (c) => c.categoryCode === cat.code
+                const isSelected = gameData.gameInfo.categories.some(
+                  (c) => c.code === cat.code
                 );
 
                 return (

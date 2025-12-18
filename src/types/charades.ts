@@ -80,6 +80,7 @@ export interface GameInfoDto {
     roundsPerTeam: number;
     status: GameStatus;
     teams: CharadesTeam[];
+    categories: CategoryDto[];
 }
 
 export interface WordBatchResponse {
@@ -96,10 +97,7 @@ export interface FinalizeGameRequest {
 
 export interface GameManageResponse {
     gameInfo: GameInfoDto;
-
-    categories: { categoryCode: string }[];
     categoryMaster: CategoryDto[];
-
     turns: TurnDto[];
 }
 
