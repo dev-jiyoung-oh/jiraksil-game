@@ -1,0 +1,70 @@
+.update-container {
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  
+  .update-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .info-text {
+    font-size: 0.9rem;
+    line-height: 1.2;
+    color: #555;
+    background: #f0f0f0;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .update-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .label-text {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  .required {
+    color: var(--color-danger);
+  }
+  
+  .label-info-text {
+    color: var(--color-text-gray);
+  }
+  
+  .update-form input {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .update-form button {
+    border-radius: 4px;
+  }
+  
+  .update-form button[type="submit"] {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+  
+  .update-form button[disabled] {
+    background-color: #9ccc9c;
+    cursor: default;
+  }
+  
+  .del-btn {
+    margin-left: 0.25rem;
+  }
+}

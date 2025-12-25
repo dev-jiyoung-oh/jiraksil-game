@@ -71,6 +71,22 @@ export interface CreateGameRequest {
     password: string;
 }
 
+export interface UpdateTeamDto {
+  code: string | null;
+  name: string;
+}
+
+export interface UpdateGameRequest {
+    mode: GameMode;
+    durationSec?: number;
+    targetCount?: number;
+    passLimit: number;
+    roundsPerTeam: number;
+    categoryCodes?: string[];
+    teams: UpdateTeamDto[];
+    password: string;
+}
+
 export interface GameInfoDto {
     code: string;
     mode: GameMode;

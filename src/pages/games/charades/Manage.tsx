@@ -36,7 +36,7 @@ export default function Manage() {
 
 
   useEffect(() => {
-    if (initialData) {
+    if (initialData && initialData.gameInfo?.code) {
       setGameData(initialData);
       setIsVerified(true);
       return;
@@ -83,6 +83,15 @@ export default function Manage() {
 
     navigate(`/game/charades/play/${gameCode}`, {
       state: gameData.gameInfo,
+    });
+  }
+
+  // 수정 화면으로 이동
+  function handleGoUpdate() {
+    if (!gameCode || !gameData?.gameInfo) return;
+
+    navigate(`/game/charades/update/${gameCode}`, {
+      state: gameData,
     });
   }
 
@@ -133,10 +142,17 @@ export default function Manage() {
           {/* 게임 정보 */}
           <section className="manage-section game-info-section">
             <header className="game-info-header">
-              <div className="header-left">
+              <div className="header-inner">
                 <h3 className="section-title">게임 정보</h3>
               </div>
-              <div className="header-right">
+              <div className="header-inner">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleGoUpdate}
+                >
+                  수정 화면으로 이동
+                </button>
                 <button
                   type="button"
                   className="btn btn-primary"
@@ -183,11 +199,6 @@ export default function Manage() {
                 <span className="info-label">팀당 라운드 수</span>
                 <span className="info-value">{gameData.gameInfo.roundsPerTeam}</span>
               </li>
-
-              {/* <li className="info-item">
-                <span className="info-label">게임 상태</span>
-                <span className="info-value">{GAME_STATUS_LABEL[gameData.gameInfo.status]}</span>
-              </li> */}
             </ul>
           </section>
 
@@ -229,26 +240,29 @@ export default function Manage() {
           <section className="manage-section play-section">
             <h3 className="section-title">플레이 기록</h3>
 
-            {groupedTurns.map(({ playNo, turns }) => {
-              const startedAt = turns[0].startedAt;
+            {groupedTurns.length === 0 ? (
+              <p className="font-gray">플레이 기록이 없습니다.</p>
+            ) : (
+              groupedTurns.map(({ playNo, turns }) => {
+                const startedAt = turns[0].startedAt;
 
-              return (
-                <article key={playNo} className="play-group">
-                  <header className="play-info">
-                    <h4 className="play-no">플레이 #{playNo}</h4>
-                    {startedAt && (
-                      <span className="start-date">
-                        {formatDateTime(startedAt)}
-                      </span>
-                    )}
-                  </header>
-                  <FinalResult
-                    teams={gameData.gameInfo.teams}
-                    turns={turns}
-                  />
-                </article>
-              );
-            })}
+                return (
+                  <article key={playNo} className="play-group">
+                    <header className="play-info">
+                      <h4 className="play-no">플레이 #{playNo}</h4>
+                      {startedAt && (
+                        <span className="start-date">
+                          {formatDateTime(startedAt)}
+                        </span>
+                      )}
+                    </header>
+                    <FinalResult
+                      teams={gameData.gameInfo.teams}
+                      turns={turns}
+                    />
+                  </article>
+                );
+            }))}
           </section>
 
         </main>
