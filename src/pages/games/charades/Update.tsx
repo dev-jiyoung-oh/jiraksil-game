@@ -333,14 +333,20 @@ export default function CharadesUpdate() {
             )}
           </fieldset>
 
-          {/* 비밀번호 */}
           <div className="form-group">
-            <label className="label-text">비밀번호</label>
+            <label htmlFor="password" className="label-text">
+              비밀번호
+              <span aria-hidden="true" className="required">*</span>
+              <span className="sr-only">필수항목</span>
+            </label>
             <input
               type="password"
+              name="password"
+              id="password"
               minLength={4}
               required
               value={password}
+              placeholder="4자리 이상"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
