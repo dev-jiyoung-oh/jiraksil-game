@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import "./WordCard.css";
 
 interface WordCardProps {
@@ -12,34 +11,22 @@ interface WordCardProps {
 
 /**
  * 몸으로 말해요 - 제시어 카드
- * 
- * - 제시어 공개/비공개 상태 표시
- * - 전환 시 부드러운 플립 애니메이션 적용
  */
 export default function WordCard({
   word,
   isVisible,
   index,
 }: WordCardProps) {
-  const [flip, setFlip] = useState(false);
-
-  // 제시어 바뀔 때마다 플립 애니메이션 트리거
-  useEffect(() => {
-    setFlip(true);
-    const timer = setTimeout(() => setFlip(false), 500);
-    return () => clearTimeout(timer);
-  }, [word]);
 
   return (
-    <div className={`wordcard-container ${flip ? "flip" : ""}`}>
+    <div className={`wordcard-container ${isVisible ? "is-visible" : "is-hidden"}`}>
       <div className="wordcard">
-        <div className={`wordcard-front ${isVisible ? "visible" : "hidden"}`} aria-hidden={!isVisible}>
-          <p className="word-text">{isVisible ? word : "❓"}</p>
-        </div>
+        <p key={word} className="word-text" aria-hidden={!isVisible}>
+          {isVisible ? word : ""}
+        </p>
       </div>
-      <p className={`word-index ${isVisible ? "visible" : "hidden"}`} aria-hidden={!isVisible}>
-        {index}
-      </p>
+    
+      <p className="word-index">{index}</p>
     </div>
   );
 }
