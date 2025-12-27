@@ -10,6 +10,9 @@
   cursor: pointer;
   transition: background 0.2s, opacity 0.2s;
 }
+.btn:hover:not(:disabled) {
+  background: #bdbdbd;
+}
 
 /* 비활성화 상태 */
 .btn:disabled {
@@ -19,6 +22,7 @@
 }
 
 /* 버튼 색상 */
+
 .btn-primary {
   background: var(--color-primary);
   color: var(--color-text-white);
