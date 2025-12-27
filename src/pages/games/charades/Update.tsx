@@ -6,6 +6,7 @@ import type {
   UpdateTeamDto,
   GameMode,
 } from "@/types/charades";
+import { useToast } from "@/components/common/toast/useToast";
 import "./Update.css";
 
 /**
@@ -14,6 +15,7 @@ import "./Update.css";
 export default function CharadesUpdate() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showToast } = useToast();
 
   // 관리화면에서 전달된 state 데이터
   const initialData = location.state as GameManageResponse | undefined;
@@ -124,7 +126,10 @@ export default function CharadesUpdate() {
       const updated = {...initialData};
       updated.gameInfo = await updateGame(initialData.gameInfo.code, req);
 
-      alert("수정이 완료되었습니다.");
+      showToast({
+        message: "수정이 완료되었습니다.",
+        type: "success",
+      });
       
       navigate(`/game/charades/manage/${updated.gameInfo.code}`, {
         replace: true,

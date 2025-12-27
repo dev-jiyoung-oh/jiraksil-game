@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { useToast } from "@/components/common/toast/useToast";
 import "./CopyButton.css";
 
 
@@ -13,6 +13,7 @@ interface CopyButtonProps {
 
 export default function CopyButton({ text, label = "복사" }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
+  const { showToast } = useToast();
 
   const handleCopy = async () => {
     try {
@@ -20,7 +21,10 @@ export default function CopyButton({ text, label = "복사" }: CopyButtonProps) 
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
     } catch {
-      alert("복사 실패!");
+      showToast({
+        message: "복사에 실패했습니다.",
+        type: "error",
+      });
     }
   };
 

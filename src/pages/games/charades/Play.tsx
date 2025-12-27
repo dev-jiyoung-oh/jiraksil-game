@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useToast } from "@/components/common/toast/useToast";
 import CopyButton from "@/components/common/CopyButton";
 import GameAccessModal from "@/components/common/GameAccessModal";
 import { toLocalDateTimeString } from "@/utils/date";
@@ -33,6 +34,7 @@ export default function Play() {
   const { gameCode } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const hasCode = !!gameCode;
 
@@ -172,7 +174,9 @@ export default function Play() {
     if (!gameData || !words || !noMoreWords) return;
     if (wordIdx < words.length) return;
 
-    alert("단어가 더 이상 없어 게임을 종료합니다.");
+    showToast({
+      message: "단어가 더 이상 없어 게임을 종료합니다."
+    });
     forceEndGame();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData, wordIdx, words, noMoreWords]);
@@ -358,7 +362,9 @@ export default function Play() {
   const handlePass = () => {
     if (!gameData || !currentTurn || !words[wordIdx]) return;
     if (currentTurn.usedPass >= gameData.passLimit) {
-      alert("패스 제한을 초과했습니다."); // TODO 토스트 알림
+      showToast({
+        message: "패스 제한을 초과했습니다."
+      });
       return;
     }
 
@@ -386,10 +392,16 @@ export default function Play() {
 
     try {
       await finalizeGame(gameData.code, { turns });
-      alert("게임 결과 저장 완료!"); // TODO 토스트 팝업
+      showToast({
+        message: "게임 결과 저장을 완료했습니다.",
+        type: "success",
+      });
       setIsGameSaved(true);
     } catch {
-      alert("결과 저장 중 오류 발생!");
+      showToast({
+        message: "게임 결과 저장 중 오류가 발생했했습니다.",
+        type: "error",
+      });
     }
   };
 

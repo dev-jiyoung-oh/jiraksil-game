@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useToast } from "@/components/common/toast/useToast";
 import "./GameAccessModal.css";
 
 interface GameAccessModalProps {
@@ -26,6 +27,8 @@ export default function GameAccessModal({
 
   const codeRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
+
+  const { showToast } = useToast();
 
   // 모달 열릴 때 초기화 + 포커스
   useEffect(() => {
@@ -56,11 +59,17 @@ export default function GameAccessModal({
     e.preventDefault();
 
     if (requireCode && !code.trim()) {
-      alert("게임 코드를 입력해주세요.");
+      showToast({
+        message: "게임 코드를 입력해주세요.",
+        type: "warning",
+      });
       return;
     }
     if (requirePassword && !password.trim()) {
-      alert("비밀번호를 입력해주세요.");
+      showToast({
+        message: "비밀번호를 입력해주세요.",
+        type: "warning",
+      });
       return;
     }
 
