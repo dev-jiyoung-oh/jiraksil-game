@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import ToastProvider from "@/components/common/toast/ToastProvider";
 import Header from "@/components/common/Header";
 import Home from '@/pages/Home';
 import WakeUpMissionRouter from '@/pages/games/wake-up-mission/Router';
@@ -8,7 +9,7 @@ import './App.css';
 function App() {
 
   return (
-    <>
+    <ToastProvider>
       <Header />
 
       <Routes>
@@ -18,7 +19,7 @@ function App() {
         <Route path="/game/charades/*" element={<CharadesRouter />} />
       </Routes>
 
-    </>
+    </ToastProvider>
   );
 }
 
