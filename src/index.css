@@ -6,6 +6,9 @@
 @import './styles/typography.css';
 @import './styles/inputs.css';
 @import './styles/layout.css';
+@import './styles/cards.css';
+@import './styles/forms.css';
+@import './styles/containers.css';
 
 /* 글로벌 설정 */
 body {

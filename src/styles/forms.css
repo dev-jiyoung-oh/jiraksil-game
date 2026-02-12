@@ -1,0 +1,82 @@
+/* 폼 공통 스타일 */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* 폼 내 label 태그 기본 스타일 */
+.form label,
+.form-group label,
+.form-label {
+  font-weight: var(--font-bold);
+  color: var(--color-text-dark);
+  font-size: var(--font-size-base);
+}
+
+/* 폼 내 legend 태그 기본 스타일 */
+.form legend,
+.form-group legend {
+  font-weight: var(--font-bold);
+  color: var(--color-text-dark);
+  font-size: var(--font-size-base);
+}
+
+/* label-text 클래스도 동일한 스타일 적용 (하위 호환성) */
+.label-text {
+  font-weight: var(--font-bold);
+  color: var(--color-text-dark);
+  font-size: var(--font-size-base);
+}
+
+/* 필수 표시 스타일 - 더 구체적인 선택자로 우선순위 높임 */
+.form-label-required::after {
+  content: ' *';
+  color: var(--color-danger) !important;
+}
+
+/* form 내부의 label에 대한 더 구체적인 선택자 */
+.form label.form-label-required::after,
+.form-group label.form-label-required::after {
+  content: ' *';
+  color: var(--color-danger) !important;
+}
+
+/* required 클래스 스타일 (하위 호환성) */
+.required {
+  color: var(--color-danger);
+}
+
+.form-label-info {
+  font-size: var(--font-size-small);
+  color: var(--color-text-light);
+  font-weight: normal;
+}
+
+/* 폼 버튼 */
+.form-button {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: var(--spacing-md);
+}
+
+.form-actions-full {
+  justify-content: stretch;
+}
+
+.form-actions-full > * {
+  flex: 1;
+}
+

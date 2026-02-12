@@ -434,7 +434,7 @@ export default function Play() {
     
   // 렌더링
   return (
-    <div className="play-container">
+    <div className="page-container-wide">
 
       {/* 인증 모달 */}
       {!isVerified && (
@@ -451,8 +451,8 @@ export default function Play() {
 
       {isVerified && gameData && currentTeam && (
         <>
-          <main className="play-contents">
-            <h2 className="play-title sr-only">몸으로 말해요 - 플레이 화면</h2>
+          <main className="flex-column play-contents">
+            <h2 className="sr-only">몸으로 말해요 - 플레이 화면</h2>
 
             <section className="play-section toolbar-section">
               <h3 className="sr-only">상단 영역</h3>

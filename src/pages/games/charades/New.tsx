@@ -145,15 +145,14 @@ export default function CharadesNew() {
 
   // ====== 렌더링 ======
   return (
-    <main className="new-container">
-      <h1 className="new-title">몸으로 말해요 - 게임 생성</h1>
+    <main className="page-container-narrow">
+      <h1 className="page-title-small">몸으로 말해요 - 게임 생성</h1>
 
-      <form className="new-form" onSubmit={handleSubmit}>
+      <form className="form new-form" onSubmit={handleSubmit}>
         {/* 모드 선택 */}
         <div className="form-group">
-          <label htmlFor="mode" className="label-text">
+          <label htmlFor="mode" className="label-text form-label-required">
             게임 모드
-            <span aria-hidden="true" className="required">*</span>
             <span className="sr-only">필수항목</span>
           </label>
           <small id="mode-limited-desc" className="font-gray">- 제한 시간 모드: 제한 시간 내에 맞추는 개수를 카운팅</small>
@@ -174,9 +173,8 @@ export default function CharadesNew() {
         {/* 모드별 옵션 */}
         {mode === "LIMITED" && (
           <div className="form-group">
-            <label htmlFor="durationSec" className="label-text">
+            <label htmlFor="durationSec" className="label-text form-label-required">
               제한 시간(초)
-              <span aria-hidden="true" className="required">*</span>
               <span className="sr-only">필수항목</span>
             </label>
             <input
@@ -195,9 +193,8 @@ export default function CharadesNew() {
 
         {mode === "UNTIL_CLEAR" && (
           <div className="form-group">
-            <label htmlFor="targetCount" className="label-text">
+            <label htmlFor="targetCount" className="label-text form-label-required">
               목표 정답 수
-              <span aria-hidden="true" className="required">*</span>
               <span className="sr-only">필수항목</span>
             </label>
             <small id="targetCount-desc" className="font-gray">최소 1문제, 최대 20문제</small>
@@ -238,9 +235,8 @@ export default function CharadesNew() {
         </fieldset>
 
         <div className="form-group">
-          <label htmlFor="roundsPerTeam" className="label-text">
+          <label htmlFor="roundsPerTeam" className="label-text form-label-required">
             팀별 라운드 수
-            <span aria-hidden="true" className="required">*</span>
             <span className="sr-only">필수항목</span>
           </label>
           <small id="roundsPerTeam-desc" className="font-gray">각 팀당 1 ~ 10 라운드까지 플레이 가능합니다.</small>
@@ -258,9 +254,8 @@ export default function CharadesNew() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="passLimit" className="label-text">
+          <label htmlFor="passLimit" className="label-text form-label-required">
             라운드별 패스 제한
-            <span aria-hidden="true" className="required">*</span>
             <span className="sr-only">필수항목</span>
           </label>
           <small id="passLimit-desc" className="font-gray">각 라운드당 0 ~ 10 개까지 사용 가능합니다.</small>
@@ -279,9 +274,8 @@ export default function CharadesNew() {
 
         {/* 팀명 입력 */}
         <fieldset className="form-group" aria-describedby="teamNames-desc1 teamNames-desc2">
-          <legend className="label-text">
+          <legend className="label-text form-label-required">
             팀 이름
-            <span aria-hidden="true" className="required">*</span>
             <span className="sr-only">필수항목</span>
           </legend>
           <small id="teamNames-desc1" className="font-gray">최소 1팀, 최대 26팀까지 추가할 수 있습니다.</small>
@@ -322,9 +316,8 @@ export default function CharadesNew() {
         </fieldset>
 
         <div className="form-group">
-          <label htmlFor="password" className="label-text">
+          <label htmlFor="password" className="label-text form-label-required">
             비밀번호
-            <span aria-hidden="true" className="required">*</span>
             <span className="sr-only">필수항목</span>
           </label>
           <small id="password-desc" className="font-gray">비밀번호는 관리화면에 접근할 때 필요합니다!</small>

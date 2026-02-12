@@ -16,8 +16,8 @@ const games = [
 
 export default function Home() {
   return (
-    <div className="home-container">
-      <h1 className="home-title">지구오락실 게임 선택</h1>
+    <div className="page-container-wide">
+      <h1 className="page-title">지구오락실 게임 선택</h1>
       <ul className="game-card-list">
         {games.map((game) => (
           <li key={game.id}>

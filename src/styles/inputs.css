@@ -1,4 +1,15 @@
-.input {
+/* input 기본 스타일 */
+.input,
+.form input,
+.form-group input,
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+input[type="time"],
+select,
+textarea {
   width: 100%;
   padding: var(--spacing-sm);
   font-size: var(--font-size-base);
@@ -8,8 +19,18 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.input:focus {
+.input:focus,
+.form input:focus,
+.form-group input:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="time"]:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+  box-shadow: var(--focus-ring);
 }

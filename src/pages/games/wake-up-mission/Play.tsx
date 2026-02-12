@@ -108,8 +108,8 @@ export default function Play() {
   };
 
   return (
-    <div className="play-container">
-      <h2 className="play-title">자네 지금 뭐 하는 건가 - 미션 확인</h2>
+    <div className="page-container-wide">
+      <h2 className="page-title-small">자네 지금 뭐 하는 건가 - 미션 확인</h2>
 
       {!isVerified && (
         <GameAccessModal

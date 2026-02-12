@@ -146,14 +146,14 @@ export default function CharadesUpdate() {
   // ========== UI 렌더링 ==========
 
   return (
-    <main className="update-container">
-      <h1 className="update-title">몸으로 말해요 - 게임 수정</h1>
+    <main className="page-container-narrow">
+      <h1 className="page-title-small">몸으로 말해요 - 게임 수정</h1>
 
       {/* initialData 없을 때도 Hook 규칙 위반 없이 처리 */}
       {!initialData ? (
         <p className="font-danger">잘못된 접근입니다. 관리 화면에서 다시 시도해주세요.</p>
       ) : (
-        <form className="update-form" onSubmit={handleSubmit}>
+        <form className="form update-form" onSubmit={handleSubmit}>
           {hasPlayHistory && (
             <p className="font-warning">
               이미 플레이 기록이 있어 일부 설정은 변경할 수 없습니다. (수정 가능한 설정: 카테고리)
@@ -162,9 +162,8 @@ export default function CharadesUpdate() {
 
           {/* 모드 선택 */}
           <div className="form-group">
-            <label htmlFor="mode">
+            <label htmlFor="mode" className="form-label-required">
               <span className="label-text">게임 모드</span>
-              <span aria-hidden="true" className="required">*</span>
               <span className="sr-only">필수항목</span>
             </label>
             <small id="mode-limited-desc" className="font-gray">- 제한 시간 모드: 제한 시간 내에 맞추는 개수를 카운팅</small>
@@ -186,9 +185,8 @@ export default function CharadesUpdate() {
           {/* 모드별 옵션 */}
           {mode === "LIMITED" && (
             <div className="form-group">
-              <label htmlFor="durationSec" className="label-text">
+              <label htmlFor="durationSec" className="label-text form-label-required">
                 제한 시간(초)
-                <span aria-hidden="true" className="required">*</span>
                 <span className="sr-only">필수항목</span>
               </label>
               <input
@@ -207,9 +205,8 @@ export default function CharadesUpdate() {
           )}
           {mode === "UNTIL_CLEAR" && (
             <div className="form-group">
-              <label htmlFor="targetCount" className="label-text">
+              <label htmlFor="targetCount" className="label-text form-label-required">
                 목표 정답 수
-                <span aria-hidden="true" className="required">*</span>
                 <span className="sr-only">필수항목</span>
               </label>
               <small id="targetCount-desc" className="font-gray">최소 1문제, 최대 20문제</small>
@@ -251,9 +248,8 @@ export default function CharadesUpdate() {
           </fieldset>
 
           <div className="form-group">
-            <label className="label-text" htmlFor="roundsPerTeam">
+            <label className="label-text form-label-required" htmlFor="roundsPerTeam">
               팀별 라운드 수
-              <span aria-hidden="true" className="required">*</span>
               <span className="sr-only">필수항목</span>
             </label>
             <small id="roundsPerTeam-desc" className="font-gray">각 팀당 1 ~ 10 라운드까지 플레이 가능합니다.</small>
@@ -272,9 +268,8 @@ export default function CharadesUpdate() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="passLimit" className="label-text">
+            <label htmlFor="passLimit" className="label-text form-label-required">
               라운드별 패스 제한
-              <span aria-hidden="true" className="required">*</span>
               <span className="sr-only">필수항목</span>
             </label>
             <small id="passLimit-desc" className="font-gray">각 라운드당 0 ~ 10 개까지 사용 가능합니다.</small>
@@ -293,9 +288,8 @@ export default function CharadesUpdate() {
           </div>
 
           <fieldset className="form-group" aria-describedby="teamNames-desc1 teamNames-desc2">
-            <legend>
+            <legend className="form-label-required">
               <span className="label-text">팀 이름</span>
-              <span aria-hidden="true" className="required">*</span>
               <span className="sr-only">필수항목</span>
             </legend>
             <small id="teamNames-desc1" className="font-gray">최소 1팀, 최대 26팀까지 추가할 수 있습니다.</small>
@@ -339,9 +333,8 @@ export default function CharadesUpdate() {
           </fieldset>
 
           <div className="form-group">
-            <label htmlFor="password" className="label-text">
+            <label htmlFor="password" className="label-text form-label-required">
               비밀번호
-              <span aria-hidden="true" className="required">*</span>
               <span className="sr-only">필수항목</span>
             </label>
             <input

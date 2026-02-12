@@ -11,7 +11,7 @@
   transition: background 0.2s, opacity 0.2s;
 }
 .btn:hover:not(:disabled) {
-  background: #bdbdbd;
+  background: var(--color-secondary-hover);
 }
 
 /* 비활성화 상태 */
@@ -36,7 +36,7 @@
   color: var(--color-text-white);
 }
 .btn-success:hover:not(:disabled) {
-  background: #388e3c;
+  background: var(--color-success-dark);
 }
 
 .btn-danger {
@@ -44,7 +44,24 @@
   color: var(--color-text-white);
 }
 .btn-danger:hover:not(:disabled) {
-  background: #d32f2f;
+  background: var(--color-danger-dark);
+}
+
+.btn-secondary {
+  background: var(--color-secondary);
+  color: var(--color-text-white);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-secondary-hover);
+}
+
+.btn-warning {
+  background: var(--color-warning);
+  color: var(--color-text-white);
+}
+.btn-warning:hover:not(:disabled) {
+  background: #f59e0b;
+  opacity: 0.9;
 }
 
 /* 버튼 크기 */

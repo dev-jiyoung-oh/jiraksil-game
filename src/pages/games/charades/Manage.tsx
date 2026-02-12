@@ -118,7 +118,7 @@ export default function Manage() {
 
   // 렌더링
   return (
-    <div className="manage-container">
+    <div className="page-container">
 
       {/* 인증 모달 */}
       {!isVerified && (
@@ -135,9 +135,9 @@ export default function Manage() {
 
       {/* 인증 성공 후 메인 UI */}
       {isVerified && gameData && (
-        <main className="manage-contents">
+        <main className="flex-column manage-contents">
 
-          <h2 className="manage-title">몸으로 말해요 - 관리 화면</h2>
+          <h2 className="page-title">몸으로 말해요 - 관리 화면</h2>
 
           {/* 게임 정보 */}
           <section className="manage-section game-info-section">

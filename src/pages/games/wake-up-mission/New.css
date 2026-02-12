@@ -1,80 +1,41 @@
-.new-container {
-  padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.new-title {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-}
-
 .info-text {
-  font-size: 0.9rem;
+  font-size: var(--font-size-small);
   line-height: 1.2;
-  color: #555;
-  background: #f0f0f0;
-  padding: 0.75rem;
-  border-radius: 4px;
-  margin-bottom: 1.5rem;
+  color: var(--color-text-gray);
+  background: var(--color-bg-gray);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-md);
 }
 
 .new-form {
-  display: flex;
-  flex-direction: column;
   gap: 1.5rem;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.new-form .form-group {
   font-size: 1rem;
 }
 
-.label-text {
-  font-weight: bold;
-}
-/* .new-form label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.9rem;
-}
-
-.label-text {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-} */
-
-.required {
-  color: var(--color-danger);
-}
-
-.label-info-text {
-  color: var(--color-text-gray);
-}
-
-.new-form input {
-  padding: 0.5rem;
-  font-size: 1rem;
-}
+/* .label-text는 공통 스타일 .form-label 사용 */
+/* .required는 공통 스타일과 동일하므로 제거 */
+/* .label-info-text는 공통 스타일 .form-label-info 사용 */
+/* input은 공통 스타일 사용, 필요시 오버라이드 */
 
 .new-form button {
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
 }
 
 .new-form button[type="submit"] {
-  padding: 0.75rem;
-  font-size: 1rem;
+  padding: var(--spacing-md);
+  font-size: var(--font-size-base);
 }
 
 .new-form button[disabled] {
-  background-color: #9ccc9c;
+  background-color: var(--color-success);
+  opacity: 0.6;
   cursor: default;
 }
 
 .del-btn {
-  margin-left: 0.25rem;
+  margin-left: var(--spacing-xs);
 }

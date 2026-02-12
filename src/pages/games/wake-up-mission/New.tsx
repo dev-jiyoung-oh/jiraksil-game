@@ -86,8 +86,8 @@ export default function WakeUpMissionNew() {
   };
 
   return (
-    <main className="new-container">
-      <h1 className="new-title">자네 지금 뭐 하는 건가 - 게임 생성</h1>
+    <main className="page-container-narrow">
+      <h1 className="page-title-small">자네 지금 뭐 하는 건가 - 게임 생성</h1>
 
       {/* <div className="info-text" id="new-form-info">
         <p>ℹ️ 기상 시간과 연락처는 선택사항입니다.</p>
@@ -100,12 +100,11 @@ export default function WakeUpMissionNew() {
         </p>
       </div> */}
 
-      <form className="new-form" onSubmit={handleSubmit} aria-labelledby="new-form-info">
+      <form className="form new-form" onSubmit={handleSubmit} aria-labelledby="new-form-info">
         
         <div className="form-group">
-          <label htmlFor="numPlayers" className="label-text">
+          <label htmlFor="numPlayers" className="label-text form-label-required">
             인원수
-            <span aria-hidden="true" className="required">*</span>
             <span className="sr-only">필수항목</span>
           </label>
           <small id="numPlayers-desc" className="font-gray">인원수만큼 미션 카드가 생성됩니다.</small>
@@ -170,9 +169,8 @@ export default function WakeUpMissionNew() {
         </fieldset> */}
 
         <div className="form-group">
-          <label htmlFor="password" className="label-text">
+          <label htmlFor="password" className="label-text form-label-required">
             비밀번호
-            <span aria-hidden="true" className="required">*</span>
             <span className="sr-only">필수항목</span>
           </label>
           <small id="password-desc" className="font-gray">비밀번호는 관리화면에 접근할 때 필요합니다!</small>

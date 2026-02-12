@@ -7,5 +7,10 @@
     align-items: center;
     flex-direction: row;
     gap: 0.5rem;
+
+    .stat {
+      display: flex;
+      gap: 0.2rem;
+    }
   }
 }

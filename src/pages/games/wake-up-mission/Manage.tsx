@@ -103,8 +103,8 @@ export default function Manage() {
   
 
   return (
-    <div className="manage-container">
-      <h2 className='manage-title'>자네 지금 뭐 하는 건가 - 관리 화면</h2>
+    <div className="page-container-narrow">
+      <h2 className='page-title-small'>자네 지금 뭐 하는 건가 - 관리 화면</h2>
 
       {!isVerified && (
         <GameAccessModal
@@ -119,7 +119,7 @@ export default function Manage() {
       )}
 
       {isVerified && gameData && (
-        <div className="manage-contents">
+        <div className="flex-column manage-contents">
           {gameData.wakeUpTime && <p>기상시간: {formatDateTime(gameData.wakeUpTime)}</p>}
           {gameData.contacts && gameData.contacts.length > 0 && (
             <div>

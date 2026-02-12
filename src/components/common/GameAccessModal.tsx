@@ -133,7 +133,7 @@ export default function GameAccessModal({
 
           {errorMessage && <p className="error-msg">{errorMessage}</p>}
 
-          <div className="actions">
+          <div className="form-actions">
             <button type="submit" className="btn btn-primary" disabled={loading}>
               확인
             </button>

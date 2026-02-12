@@ -1,3 +1,9 @@
+/* 제목 태그 기본 스타일 */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-bold);
+  color: var(--color-text-dark);
+}
+
 small {
   font-size: var(--font-size-small);
 }

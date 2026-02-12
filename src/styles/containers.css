@@ -1,0 +1,46 @@
+/* 페이지 컨테이너 공통 스타일 */
+.page-container {
+  padding: var(--spacing-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-container-narrow {
+  padding: var(--spacing-xl);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.page-container-wide {
+  padding: var(--spacing-xl);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 중앙 정렬 컨테이너 */
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px); /* 헤더 높이 제외 */
+  padding: var(--spacing-lg);
+}
+
+/* 페이지 타이틀 공통 스타일 */
+.page-title {
+  font-size: 2rem;
+  font-weight: var(--font-bold);
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text-dark);
+}
+
+.page-title-center {
+  text-align: center;
+}
+
+.page-title-small {
+  font-size: 1.8rem;
+  font-weight: var(--font-bold);
+  margin-bottom: var(--spacing-md);
+}
+
