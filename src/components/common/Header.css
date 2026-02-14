@@ -21,6 +21,12 @@
   align-items: center;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 /* Menubar 기본 */
 .menubar {
   display: flex;
@@ -95,4 +101,40 @@ a[role="menuitem"] {
 
 .menubar > li {
   position: relative;
+}
+
+.header-auth {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-left: 0.4rem;
+}
+
+.header-user-name {
+  font-size: 0.95rem;
+  color: #333;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-auth-link,
+.header-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.92rem;
+  border-radius: 4px;
+  color: #333;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid #d9d9d9;
+  cursor: pointer;
+}
+
+.header-auth-link:hover,
+.header-auth-btn:hover {
+  background: #f4f4f4;
 }

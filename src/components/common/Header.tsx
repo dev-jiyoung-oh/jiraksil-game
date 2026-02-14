@@ -1,13 +1,19 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AppLogo from "./AppLogo";
 import ChevronDown from "@/components/icons/ChevronDown";
+import { logout } from "@/api/auth";
+import { useAuth } from "@/hooks/common/useAuth";
+import { useToast } from "@/components/common/toast/useToast";
 import type { GameType } from "@/types/common";
 import "./Header.css";
 
 
 export default function Header() {
   const [openMenu, setOpenMenu] = useState<GameType | null>(null);
+  const navigate = useNavigate();
+  const { showToast } = useToast();
+  const { user, clearUser } = useAuth();
 
   const menuRefs = {
     wakeUpMission: useRef<HTMLLIElement>(null),
@@ -76,6 +82,24 @@ export default function Header() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      clearUser();
+      showToast({
+        message: "로그아웃되었습니다.",
+        type: "success",
+      });
+      navigate("/");
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "로그아웃에 실패했습니다.";
+      showToast({
+        message: errorMessage,
+        type: "error",
+      });
+    }
+  };
+
 
   return (
     <header className="app-header" role="banner">
@@ -83,102 +107,124 @@ export default function Header() {
         <AppLogo size="base" />
       </Link>
 
-      <nav aria-label="지락실 메뉴" className="header-nav">
-        <ul role="menubar" className="menubar">
+      <div className="header-right">
+        <nav aria-label="지락실 메뉴" className="header-nav">
+          <ul role="menubar" className="menubar">
           
-          {/* 자네 지금 뭐 하는 건가 메뉴 */}
-          <li
-            role="none"
-            ref={menuRefs.wakeUpMission}
-            onMouseEnter={() => handleMouseEnter("wakeUpMission")}
-            onMouseLeave={(e) => handleMouseLeave(e, "wakeUpMission")}
-          >
-            <button
-              type="button"
-              role="menuitem"
-              aria-haspopup="true"
-              aria-expanded={openMenu === "wakeUpMission"}
-              className="menu-trigger"
-              onClick={() => toggleMenu("wakeUpMission")}
-              onKeyDown={(e) => handleTriggerKeyDown(e, "wakeUpMission")}
+            {/* 자네 지금 뭐 하는 건가 메뉴 */}
+            <li
+              role="none"
+              ref={menuRefs.wakeUpMission}
+              onMouseEnter={() => handleMouseEnter("wakeUpMission")}
+              onMouseLeave={(e) => handleMouseLeave(e, "wakeUpMission")}
             >
-              자네 지금 뭐 하는 건가
-              <ChevronDown className={`chevron ${openMenu === "wakeUpMission" ? "open" : ""}`} />
-            </button>
-
-            {openMenu === "wakeUpMission" && (
-              <ul
-                role="menu"
-                className="submenu"
-                aria-label="자네 지금 뭐 하는 건가 메뉴"
-                onBlur={(e) => handleSubmenuBlur(e, "wakeUpMission")}
+              <button
+                type="button"
+                role="menuitem"
+                aria-haspopup="true"
+                aria-expanded={openMenu === "wakeUpMission"}
+                className="menu-trigger"
+                onClick={() => toggleMenu("wakeUpMission")}
+                onKeyDown={(e) => handleTriggerKeyDown(e, "wakeUpMission")}
               >
-                <li role="none">
-                  <Link role="menuitem" to="/game/wake-up-mission/new" onClick={() => setOpenMenu(null)}>
-                    게임 생성
-                  </Link>
-                </li>
-                <li role="none">
-                  <Link role="menuitem" to="/game/wake-up-mission/play" onClick={() => setOpenMenu(null)}>
-                    게임 플레이
-                  </Link>
-                </li>
-                <li role="none">
-                  <Link role="menuitem" to="/game/wake-up-mission/manage" onClick={() => setOpenMenu(null)}>
-                    게임 관리
-                  </Link>
-                </li>
-              </ul>
-            )}
-          </li>
+                자네 지금 뭐 하는 건가
+                <ChevronDown className={`chevron ${openMenu === "wakeUpMission" ? "open" : ""}`} />
+              </button>
+
+              {openMenu === "wakeUpMission" && (
+                <ul
+                  role="menu"
+                  className="submenu"
+                  aria-label="자네 지금 뭐 하는 건가 메뉴"
+                  onBlur={(e) => handleSubmenuBlur(e, "wakeUpMission")}
+                >
+                  <li role="none">
+                    <Link role="menuitem" to="/game/wake-up-mission/new" onClick={() => setOpenMenu(null)}>
+                      게임 생성
+                    </Link>
+                  </li>
+                  <li role="none">
+                    <Link role="menuitem" to="/game/wake-up-mission/play" onClick={() => setOpenMenu(null)}>
+                      게임 플레이
+                    </Link>
+                  </li>
+                  <li role="none">
+                    <Link role="menuitem" to="/game/wake-up-mission/manage" onClick={() => setOpenMenu(null)}>
+                      게임 관리
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
           
-          {/* 몸으로 말해요 메뉴 */}
-          <li
-            role="none"
-            ref={menuRefs.charades}
-            onMouseEnter={() => handleMouseEnter("charades")}
-            onMouseLeave={(e) => handleMouseLeave(e, "charades")}
-          >
-            <button
-              type="button"
-              role="menuitem"
-              aria-haspopup="true"
-              aria-expanded={openMenu === "charades"}
-              className="menu-trigger"
-              onClick={() => toggleMenu("charades")}
-              onKeyDown={(e) => handleTriggerKeyDown(e, "charades")}
+            {/* 몸으로 말해요 메뉴 */}
+            <li
+              role="none"
+              ref={menuRefs.charades}
+              onMouseEnter={() => handleMouseEnter("charades")}
+              onMouseLeave={(e) => handleMouseLeave(e, "charades")}
             >
-              몸으로 말해요
-              <ChevronDown className={`chevron ${openMenu === "charades" ? "open" : ""}`} />
-            </button>
-
-            {openMenu === "charades" && (
-              <ul
-                role="menu"
-                className="submenu"
-                aria-label="몸으로 말해요 메뉴"
-                onBlur={(e) => handleSubmenuBlur(e, "charades")}
+              <button
+                type="button"
+                role="menuitem"
+                aria-haspopup="true"
+                aria-expanded={openMenu === "charades"}
+                className="menu-trigger"
+                onClick={() => toggleMenu("charades")}
+                onKeyDown={(e) => handleTriggerKeyDown(e, "charades")}
               >
-                <li role="none">
-                  <Link role="menuitem" to="/game/charades/new" onClick={() => setOpenMenu(null)}>
-                    게임 생성
-                  </Link>
-                </li>
-                <li role="none">
-                  <Link role="menuitem" to="/game/charades/play" onClick={() => setOpenMenu(null)}>
-                    게임 플레이
-                  </Link>
-                </li>
-                <li role="none">
-                  <Link role="menuitem" to="/game/charades/manage" onClick={() => setOpenMenu(null)}>
-                    게임 관리
-                  </Link>
-                </li>
-              </ul>
-            )}
-          </li>
-        </ul>
-      </nav>
+                몸으로 말해요
+                <ChevronDown className={`chevron ${openMenu === "charades" ? "open" : ""}`} />
+              </button>
+
+              {openMenu === "charades" && (
+                <ul
+                  role="menu"
+                  className="submenu"
+                  aria-label="몸으로 말해요 메뉴"
+                  onBlur={(e) => handleSubmenuBlur(e, "charades")}
+                >
+                  <li role="none">
+                    <Link role="menuitem" to="/game/charades/new" onClick={() => setOpenMenu(null)}>
+                      게임 생성
+                    </Link>
+                  </li>
+                  <li role="none">
+                    <Link role="menuitem" to="/game/charades/play" onClick={() => setOpenMenu(null)}>
+                      게임 플레이
+                    </Link>
+                  </li>
+                  <li role="none">
+                    <Link role="menuitem" to="/game/charades/manage" onClick={() => setOpenMenu(null)}>
+                      게임 관리
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+          </ul>
+        </nav>
+
+        <div className="header-auth">
+          {user ? (
+            <>
+              <span className="header-user-name">{user.name || user.email}</span>
+              <button type="button" className="header-auth-btn" onClick={handleLogout}>
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="header-auth-link">
+                로그인
+              </Link>
+              <Link to="/signup" className="header-auth-link">
+                회원가입
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
     </header>
   );
 }
