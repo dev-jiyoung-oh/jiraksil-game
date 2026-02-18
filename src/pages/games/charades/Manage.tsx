@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { getGameManage } from "@/api/charades";
+import { useGameAccess } from "@/hooks/common/useGameAccess";
 import CopyButton from "@/components/common/CopyButton";
 import GameAccessModal from "@/components/common/GameAccessModal";
 import FinalResult from "@/components/charades/FinalResult";
@@ -21,61 +22,20 @@ export default function Manage() {
   const hasCode = !!gameCode;
   const initialData = location.state as GameManageResponse | undefined;
 
-  // 게임 정보
-  const [gameData, setGameData] = useState<GameManageResponse | null>(null);
+  const { gameData, isVerified, errorMessage, handleAccessSubmit } =
+    useGameAccess<GameManageResponse>({
+      gameCode,
+      initialData,
+      fetcher: getGameManage,
+      routeBase: "/game/charades/manage",
+      extractCode: (d) => d.gameInfo.code,
+    });
 
   // 게임 턴 정보(플레이 번호로 그룹핑)
   const groupedTurns = useMemo(() => {
     if (!gameData?.turns) return [];
     return groupTurnsByPlayNo(gameData.turns);
   }, [gameData?.turns]);
-
-  // 인증 관련
-  const [isVerified, setIsVerified] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-
-  useEffect(() => {
-    if (initialData && initialData.gameInfo?.code) {
-      setGameData(initialData);
-      setIsVerified(true);
-      return;
-    }
-
-    if (!gameCode) {
-      setIsVerified(false);
-      return;
-    }
-
-    setIsVerified(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameCode]);
-
-  // 인증 요청
-  const handleAccessSubmit = async (code: string, password: string) => {
-    try {
-      setErrorMessage("");
-
-      const data = await getGameManage(code, password);
-
-      if (gameCode) {
-        setGameData(data);
-        setIsVerified(true);
-      } else {
-        navigate(`/game/charades/manage/${data.gameInfo.code}`, {
-          replace: true,
-          state: data,
-        });
-      }
-      
-    } catch (err) {
-      if (err instanceof Error) {
-        setErrorMessage(err.message || "조회에 실패했습니다.");
-      } else {
-        setErrorMessage("알 수 없는 오류가 발생했습니다.");
-      }
-    }
-  };
 
   // 플레이 화면으로 이동
   function handleGoPlay() {
