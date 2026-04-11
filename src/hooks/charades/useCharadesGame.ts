@@ -135,10 +135,15 @@ export function useCharadesGame({
       gameData?.mode === "LIMITED"
         ? (gameData.durationSec ?? undefined)
         : undefined,
-    onTimeUp: () => {
-      endTurn(gameData?.durationSec ?? 0);
-    },
   });
+
+  // 시간 만료 시 턴 종료
+  useEffect(() => {
+    if (timer.isTimeUp) {
+      endTurn(gameData?.durationSec ?? 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timer.isTimeUp]);
 
   // ── 단어 풀 ──
   const wordPool = useWordPool({
