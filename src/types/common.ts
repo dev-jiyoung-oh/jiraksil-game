@@ -1,2 +1,1 @@
-export type GameType = "wakeUpMission" | "charades";
-
+export type GameType = "CHARADES" | "WAKE_UP_MISSION";

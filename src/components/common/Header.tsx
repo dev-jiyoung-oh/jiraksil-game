@@ -16,8 +16,8 @@ export default function Header() {
   const { user, clearUser } = useAuth();
 
   const menuRefs = {
-    wakeUpMission: useRef<HTMLLIElement>(null),
-    charades: useRef<HTMLLIElement>(null),
+    WAKE_UP_MISSION: useRef<HTMLLIElement>(null),
+    CHARADES: useRef<HTMLLIElement>(null),
   };
 
   // ESC 닫기
@@ -59,13 +59,13 @@ export default function Header() {
     e: React.KeyboardEvent<HTMLButtonElement>,
     menu: GameType
   ) => {
-    if (menu === "charades") {
-      if (e.key === "ArrowRight") menuRefs.wakeUpMission.current?.querySelector("button")?.focus();
-      if (e.key === "ArrowDown") setOpenMenu("charades");
+    if (menu === "CHARADES") {
+      if (e.key === "ArrowRight") menuRefs.WAKE_UP_MISSION.current?.querySelector("button")?.focus();
+      if (e.key === "ArrowDown") setOpenMenu("CHARADES");
     }
-    if (menu === "wakeUpMission") {
-      if (e.key === "ArrowLeft") menuRefs.charades.current?.querySelector("button")?.focus();
-      if (e.key === "ArrowDown") setOpenMenu("wakeUpMission");
+    if (menu === "WAKE_UP_MISSION") {
+      if (e.key === "ArrowLeft") menuRefs.CHARADES.current?.querySelector("button")?.focus();
+      if (e.key === "ArrowDown") setOpenMenu("WAKE_UP_MISSION");
     }
   };
 
@@ -114,29 +114,29 @@ export default function Header() {
             {/* 자네 지금 뭐 하는 건가 메뉴 */}
             <li
               role="none"
-              ref={menuRefs.wakeUpMission}
-              onMouseEnter={() => handleMouseEnter("wakeUpMission")}
-              onMouseLeave={(e) => handleMouseLeave(e, "wakeUpMission")}
+              ref={menuRefs.WAKE_UP_MISSION}
+              onMouseEnter={() => handleMouseEnter("WAKE_UP_MISSION")}
+              onMouseLeave={(e) => handleMouseLeave(e, "WAKE_UP_MISSION")}
             >
               <button
                 type="button"
                 role="menuitem"
                 aria-haspopup="true"
-                aria-expanded={openMenu === "wakeUpMission"}
+                aria-expanded={openMenu === "WAKE_UP_MISSION"}
                 className="menu-trigger"
-                onClick={() => toggleMenu("wakeUpMission")}
-                onKeyDown={(e) => handleTriggerKeyDown(e, "wakeUpMission")}
+                onClick={() => toggleMenu("WAKE_UP_MISSION")}
+                onKeyDown={(e) => handleTriggerKeyDown(e, "WAKE_UP_MISSION")}
               >
                 자네 지금 뭐 하는 건가
-                <ChevronDown className={`chevron ${openMenu === "wakeUpMission" ? "open" : ""}`} />
+                <ChevronDown className={`chevron ${openMenu === "WAKE_UP_MISSION" ? "open" : ""}`} />
               </button>
 
-              {openMenu === "wakeUpMission" && (
+              {openMenu === "WAKE_UP_MISSION" && (
                 <ul
                   role="menu"
                   className="submenu"
                   aria-label="자네 지금 뭐 하는 건가 메뉴"
-                  onBlur={(e) => handleSubmenuBlur(e, "wakeUpMission")}
+                  onBlur={(e) => handleSubmenuBlur(e, "WAKE_UP_MISSION")}
                 >
                   <li role="none">
                     <Link role="menuitem" to="/game/wake-up-mission/new" onClick={() => setOpenMenu(null)}>
@@ -160,29 +160,29 @@ export default function Header() {
             {/* 몸으로 말해요 메뉴 */}
             <li
               role="none"
-              ref={menuRefs.charades}
-              onMouseEnter={() => handleMouseEnter("charades")}
-              onMouseLeave={(e) => handleMouseLeave(e, "charades")}
+              ref={menuRefs.CHARADES}
+              onMouseEnter={() => handleMouseEnter("CHARADES")}
+              onMouseLeave={(e) => handleMouseLeave(e, "CHARADES")}
             >
               <button
                 type="button"
                 role="menuitem"
                 aria-haspopup="true"
-                aria-expanded={openMenu === "charades"}
+                aria-expanded={openMenu === "CHARADES"}
                 className="menu-trigger"
-                onClick={() => toggleMenu("charades")}
-                onKeyDown={(e) => handleTriggerKeyDown(e, "charades")}
+                onClick={() => toggleMenu("CHARADES")}
+                onKeyDown={(e) => handleTriggerKeyDown(e, "CHARADES")}
               >
                 몸으로 말해요
-                <ChevronDown className={`chevron ${openMenu === "charades" ? "open" : ""}`} />
+                <ChevronDown className={`chevron ${openMenu === "CHARADES" ? "open" : ""}`} />
               </button>
 
-              {openMenu === "charades" && (
+              {openMenu === "CHARADES" && (
                 <ul
                   role="menu"
                   className="submenu"
                   aria-label="몸으로 말해요 메뉴"
-                  onBlur={(e) => handleSubmenuBlur(e, "charades")}
+                  onBlur={(e) => handleSubmenuBlur(e, "CHARADES")}
                 >
                   <li role="none">
                     <Link role="menuitem" to="/game/charades/new" onClick={() => setOpenMenu(null)}>
@@ -208,7 +208,9 @@ export default function Header() {
         <div className="header-auth">
           {user ? (
             <>
-              <span className="header-user-name">{user.name || user.email}</span>
+              <Link to="/mypage" className="header-user-name header-user-link">
+                {user.name || user.email}
+              </Link>
               <button type="button" className="header-auth-btn" onClick={handleLogout}>
                 로그아웃
               </button>

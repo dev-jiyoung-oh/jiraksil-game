@@ -7,6 +7,7 @@ import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
 import WakeUpMissionRouter from '@/pages/games/wake-up-mission/Router';
 import CharadesRouter from '@/pages/games/charades/Router';
+import MyPage from '@/pages/MyPage';
 import './App.css';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/game" element={<Home />} />
           <Route path="/game/wake-up-mission/*" element={<WakeUpMissionRouter />} />
           <Route path="/game/charades/*" element={<CharadesRouter />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </AuthProvider>
     </ToastProvider>

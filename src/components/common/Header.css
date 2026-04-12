@@ -119,6 +119,15 @@ a[role="menuitem"] {
   white-space: nowrap;
 }
 
+.header-user-link {
+  text-decoration: none;
+  color: #333;
+}
+
+.header-user-link:hover {
+  color: var(--color-primary);
+}
+
 .header-auth-link,
 .header-auth-btn {
   display: inline-flex;
