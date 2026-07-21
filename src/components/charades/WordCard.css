@@ -1,3 +1,23 @@
+@keyframes page-flip-in {
+  0% {
+    transform: perspective(600px) rotateX(-90deg);
+    opacity: 0.3;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  }
+  65% {
+    transform: perspective(600px) rotateX(6deg);
+    opacity: 1;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  85% {
+    transform: perspective(600px) rotateX(-2deg);
+  }
+  100% {
+    transform: perspective(600px) rotateX(0deg);
+    box-shadow: none;
+  }
+}
+
 .wordcard-container {
   display: flex;
   flex-direction: column;
@@ -10,7 +30,8 @@
     background-color: #fdfdfd;
     border: 3px solid #333;
     border-radius: 12px;
-  
+    transform-origin: top center;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,10 +51,14 @@
   }
 
   &.is-visible {
+    .wordcard {
+      animation: page-flip-in 0.38s ease-out;
+    }
+
     .word-text {
       color: #2c3e50;
     }
-    
+
     .word-index {
       visibility: visible;
     }

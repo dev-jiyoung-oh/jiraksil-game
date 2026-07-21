@@ -20,12 +20,12 @@ export default function WordCard({
 
   return (
     <div className={`wordcard-container ${isVisible ? "is-visible" : "is-hidden"}`}>
-      <div className="wordcard">
-        <p key={word} className="word-text" aria-hidden={!isVisible}>
+      <div key={index} className="wordcard">
+        <p className="word-text" aria-hidden={!isVisible}>
           {isVisible ? word : ""}
         </p>
       </div>
-    
+
       <p className="word-index">{index}</p>
     </div>
   );
