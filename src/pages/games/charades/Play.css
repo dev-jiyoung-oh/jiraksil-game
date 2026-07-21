@@ -1,15 +1,158 @@
-.play-contents {
+/* =============================================
+   플레이 레이아웃 - CSS Grid
+   모바일/패드: [정답] [스케치북] [패스] 사이드 배치
+   PC(≥1024px): 스케치북 좌 / 컨트롤 우 2단 배치
+   ============================================= */
+
+.play-layout {
+  display: grid;
   gap: var(--spacing-md);
+  column-gap: var(--spacing-sm);
 
-  .toolbar-section {
+  /* 모바일/패드: 사이드 버튼 1fr | 카드 auto | 사이드 버튼 1fr */
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas:
+    "toolbar  toolbar  toolbar"
+    "info     info     info"
+    "timer    timer    timer"
+    "correct  word     pass"
+    "start    start    start"
+    "end      end      end";
+}
+
+/* ── 그리드 영역 배치 ── */
+
+.area-toolbar {
+  grid-area: toolbar;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .toolbar-right {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: var(--spacing-sm);
+  }
+}
 
-    .toolbar-right {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
+.area-info {
+  grid-area: info;
+}
+
+.area-timer {
+  grid-area: timer;
+  display: flex;
+  justify-content: center;
+}
+
+.area-word {
+  grid-area: word;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.area-correct {
+  grid-area: correct;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.area-pass {
+  grid-area: pass;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.area-start {
+  grid-area: start;
+  display: flex;
+  justify-content: center;
+}
+
+.area-end {
+  grid-area: end;
+  display: flex;
+  justify-content: center;
+}
+
+/* ── 버튼 스타일 ── */
+
+/* 정답 / 패스: 스케치북 양 옆에 붙는 액션 버튼 */
+.play-action-btn {
+  width: 100%;
+  height: 100%;
+  min-height: 80px;
+  font-size: clamp(0.9rem, 2.8vw, 1.15rem);
+  font-weight: bold;
+  border-radius: 12px;
+  color: white;
+}
+
+/* 시작·일시정지·턴종료: 하단 컨트롤 버튼 */
+.play-ctrl-btn {
+  width: 100%;
+  max-width: 320px;
+  color: white;
+}
+
+/* ── 버튼 색상 ── */
+
+.btn-start                       { background-color: #2ecc71; }
+.btn-start:hover:not(:disabled)  { background-color: #27ae60; }
+
+.btn-pause                       { background-color: #f39c12; }
+.btn-pause:hover:not(:disabled)  { background-color: #e67e22; }
+
+.btn-correct                     { background-color: #3498db; }
+.btn-correct:hover:not(:disabled){ background-color: #2980b9; }
+
+.btn-pass                        { background-color: #9b59b6; }
+.btn-pass:hover:not(:disabled)   { background-color: #8e44ad; }
+
+.btn-end                         { background-color: #e74c3c; }
+.btn-end:hover:not(:disabled)    { background-color: #c0392b; }
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* =============================================
+   PC 레이아웃 (≥1024px)
+   스케치북 좌 / 컨트롤(시작, 정답, 패스, 턴종료) 우
+   ============================================= */
+
+@media (min-width: 1024px) {
+  .play-layout {
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--spacing-xl);
+    row-gap: var(--spacing-md);
+    grid-template-areas:
+      "toolbar toolbar"
+      "info    info"
+      "timer   start"
+      "word    correct"
+      "word    pass"
+      "word    end";
+    align-items: center;
+  }
+
+  .area-correct { justify-content: center; }
+  .area-pass    { justify-content: center; }
+
+  /* PC에서 정답/패스: 사이드 배치 해제, 일반 버튼으로 */
+  .play-action-btn {
+    height: auto;
+    min-height: unset;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-large);
+  }
+
+  /* PC에서 하단 컨트롤: 우측 컬럼 전체 너비 */
+  .play-ctrl-btn {
+    max-width: none;
   }
 }
