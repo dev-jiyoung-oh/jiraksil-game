@@ -31,10 +31,49 @@
     border: 3px solid #333;
     border-radius: 12px;
     transform-origin: top center;
+    position: relative;
 
     display: flex;
     justify-content: center;
     align-items: center;
+
+    /* 스케치북 스프링 */
+    &::before {
+      content: '';
+      position: absolute;
+      top: -11px;
+      left: 8%;
+      right: 8%;
+      height: 22px;
+      pointer-events: none;
+      z-index: 2;
+      background-image:
+        radial-gradient(
+          ellipse 8px 11px at center,
+          transparent 4px,
+          #333 4px, #333 5.5px,
+          #555 5.5px, #555 6.5px,
+          transparent 6.5px
+        ),
+        linear-gradient(
+          transparent 38%,
+          #333 38%, #333 48%,
+          transparent 48%
+        );
+      background-size: 26px 100%, 100% 100%;
+      background-repeat: repeat-x, no-repeat;
+
+      /* 3~6시 방향(우하단 사분면)을 숨겨 링이 종이 뒤로 들어가는 효과
+         mask 타일을 링 간격(26px)에 맞춰 반복해 링마다 적용 */
+      mask-image: conic-gradient(
+        at 50% 50%,
+        black 0deg 90deg,
+        transparent 90deg 180deg,
+        black 180deg 360deg
+      );
+      mask-size: 26px 100%;
+      mask-repeat: repeat-x;
+    }
 
     .word-text {
       font-size: clamp(1.2rem, 4.5vw, 2.4rem);
