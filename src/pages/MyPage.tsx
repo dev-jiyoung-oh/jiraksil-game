@@ -245,7 +245,7 @@ export default function MyPage() {
                 <tr key={game.code}>
                   <td>
                     {game.code}
-                    <CopyButton text={game.code} label="복사" />
+                    <CopyButton text={game.code} />
                   </td>
                   <td>{GAME_TYPE_LABEL[game.gameType]}</td>
                   <td>{game.mode ? GAME_MODE_LABEL[game.mode] : "-"}</td>
