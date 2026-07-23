@@ -80,13 +80,15 @@
       font-weight: bold;
       color: transparent;
     }
-  }
-  
-  .word-index {
-    font-size: 0.9rem;
-    color: #555;
-    min-height: 1.2em;
-    visibility: hidden;
+
+    .word-index {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-size: 0.8rem;
+      color: transparent;
+      line-height: 1;
+    }
   }
 
   &.is-visible {
@@ -99,7 +101,7 @@
     }
 
     .word-index {
-      visibility: visible;
+      color: #999;
     }
   }
 }

@@ -24,9 +24,8 @@ export default function WordCard({
         <p className="word-text" aria-hidden={!isVisible}>
           {isVisible ? word : ""}
         </p>
+        <p className="word-index">{index}</p>
       </div>
-
-      <p className="word-index">{index}</p>
     </div>
   );
 }
