@@ -205,9 +205,17 @@ export default function Header() {
           <div className="mobile-panel-auth">
             {user ? (
               <>
-                <Link to="/mypage" className="mobile-auth-username" onClick={closeMobileMenu}>
-                  {user.name || user.email}
-                </Link>
+                <div className="mobile-auth-user">
+                  <Link to="/mypage" className="mobile-auth-username" onClick={closeMobileMenu}>
+                    {user.name || user.email}
+                  </Link>
+                  <Link to="/mypage" className="mobile-auth-icon-btn" aria-label="마이페이지" onClick={closeMobileMenu}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="8" r="4" />
+                      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                    </svg>
+                  </Link>
+                </div>
                 <button type="button" className="mobile-auth-btn" onClick={handleLogout}>
                   로그아웃
                 </button>
