@@ -2,7 +2,6 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getGameData } from "@/api/wakeUpMission";
 import { useGameAccess } from '@/hooks/common/useGameAccess';
 import GameAccessModal from '@/components/common/GameAccessModal';
-import CopyButton from '@/components/common/CopyButton';
 import MissionCardList from '@/components/wake-up-mission/MissionCardList';
 import type { WakeUpMissionGame, WakeUpMissionGameViewModel } from '@/types/wakeUpMission';
 import { formatDateTime } from '@/utils/date';
@@ -82,10 +81,6 @@ export default function Play() {
 
       {isVerified && gameData && (
         <>
-          <div className="flex" style={{ alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <span>게임 코드: {gameCode}</span>
-            <CopyButton text={gameCode!} />
-          </div>
           {gameData.wakeUpTime && <p>기상시간: {formatDateTime(gameData.wakeUpTime)}</p>}
           <MissionCardList
             missions={gameData.missions}

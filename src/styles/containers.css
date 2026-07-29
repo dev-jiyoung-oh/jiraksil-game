@@ -1,17 +1,23 @@
 /* 페이지 컨테이너 공통 스타일 */
 .page-container {
+  width: 100%;
+  box-sizing: border-box;
   padding: var(--spacing-xl);
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .page-container-narrow {
+  width: 100%;
+  box-sizing: border-box;
   padding: var(--spacing-xl);
   max-width: 600px;
   margin: 0 auto;
 }
 
 .page-container-wide {
+  width: 100%;
+  box-sizing: border-box;
   padding: var(--spacing-xl);
   max-width: 800px;
   margin: 0 auto;

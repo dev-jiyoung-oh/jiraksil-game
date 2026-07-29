@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import AppLogo from "@/components/common/AppLogo";
 import "./Footer.css";
@@ -9,70 +9,44 @@ import "./Footer.css";
 export default function Footer() {
   const { pathname } = useLocation();
   const isPlayPage = pathname.includes("/play");
-  const [isOpen, setIsOpen] = useState(false);
+  const footerRef = useRef<HTMLElement>(null);
 
-  const touchStartY = useRef<number | null>(null);
+  // 플레이 페이지: 푸터 높이를 CSS 변수로 설정 (풀스크린 버튼 위치 계산용)
+  useEffect(() => {
+    if (!isPlayPage) {
+      document.documentElement.style.removeProperty("--footer-height");
+      return;
+    }
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-  };
+    const update = () => {
+      const h = footerRef.current?.offsetHeight ?? 0;
+      document.documentElement.style.setProperty("--footer-height", `${h}px`);
+    };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartY.current === null) return;
-    const diff = touchStartY.current - e.changedTouches[0].clientY;
-    if (diff > 30) setIsOpen(true);
-    if (diff < -30) setIsOpen(false);
-    touchStartY.current = null;
-  };
+    update();
+    const ro = new ResizeObserver(update);
+    if (footerRef.current) ro.observe(footerRef.current);
+    return () => ro.disconnect();
+  }, [isPlayPage]);
 
-  const inner = (
-    <div className="footer-inner">
-      <Link to="/" className="footer-logo">
-        <AppLogo size="sm" />
-      </Link>
-      <nav className="footer-links">
-        <a
-          href="https://github.com/dev-jiyoung-oh/jiraksil-game"
-          target="_blank"
-          rel="noreferrer"
-        >
-          GitHub (FE)
+  return (
+    <footer ref={footerRef} className={`footer${isPlayPage ? " footer--fixed" : ""}`}>
+      <div className="footer-inner">
+        <Link to="/" className="footer-logo">
+          <AppLogo size="sm" />
+        </Link>
+        <nav className="footer-links">
+          <a href="https://github.com/dev-jiyoung-oh/jiraksil-game" target="_blank" rel="noreferrer">
+            GitHub (FE)
+          </a>
+          <a href="https://github.com/dev-jiyoung-oh/jiraksil-game-backend" target="_blank" rel="noreferrer">
+            GitHub (BE)
+          </a>
+        </nav>
+        <a className="footer-credit" href="https://github.com/dev-jiyoung-oh" target="_blank" rel="noreferrer">
+          Made by JY
         </a>
-        <a
-          href="https://github.com/dev-jiyoung-oh/jiraksil-game-backend"
-          target="_blank"
-          rel="noreferrer"
-        >
-          GitHub (BE)
-        </a>
-      </nav>
-      <a
-        className="footer-credit"
-        href="https://github.com/dev-jiyoung-oh"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Made by JY
-      </a>
-    </div>
+      </div>
+    </footer>
   );
-
-  if (isPlayPage) {
-    return (
-      <footer
-        className={`footer footer--fixed footer--drawer${isOpen ? " footer--open" : ""}`}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        <button
-          className="footer-handle"
-          onClick={() => setIsOpen((v) => !v)}
-          aria-label="푸터 열기/닫기"
-        />
-        {inner}
-      </footer>
-    );
-  }
-
-  return <footer className="footer">{inner}</footer>;
 }

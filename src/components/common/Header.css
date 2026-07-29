@@ -183,6 +183,11 @@
   z-index: 50;
 }
 
+/* 풀스크린 모드: 헤더 숨김 */
+.is-fullscreen .app-header {
+  display: none;
+}
+
 .header-row {
   display: flex;
   align-items: center;

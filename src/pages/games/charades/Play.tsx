@@ -3,7 +3,6 @@ import { getGameDetail } from "@/api/charades";
 import { useGameAccess } from "@/hooks/common/useGameAccess";
 import { useCharadesGame } from "@/hooks/charades/useCharadesGame";
 
-import CopyButton from "@/components/common/CopyButton";
 import GameAccessModal from "@/components/common/GameAccessModal";
 import Timer from "@/components/charades/Timer";
 import WordCard from "@/components/charades/WordCard";
@@ -104,10 +103,6 @@ export default function Play() {
                 >
                   관리 화면으로 이동
                 </button>
-              </div>
-              <div className="toolbar-right">
-                <span className="code">게임 코드: {gameData.code}</span>
-                <CopyButton text={gameData.code} />
               </div>
             </section>
 

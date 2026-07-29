@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import AppLogo from "./AppLogo";
 import ChevronDown from "@/components/icons/ChevronDown";
 import { logout } from "@/api/auth";
@@ -36,11 +36,17 @@ export default function Header() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { user, clearUser } = useAuth();
+  const { pathname } = useLocation();
 
   const menuRefs = {
     WAKE_UP_MISSION: useRef<HTMLLIElement>(null),
     CHARADES: useRef<HTMLLIElement>(null),
   };
+
+  // 페이지 이동 시 메뉴 닫기
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
 
   // 모바일 메뉴 열릴 때 스크롤 잠금
   useEffect(() => {

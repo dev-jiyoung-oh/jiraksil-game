@@ -1,7 +1,17 @@
 .mission-card-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   list-style: none;
   padding: 0;
+}
+
+.mission-card-list li {
+  container-type: inline-size;
+}
+
+@media (max-width: 480px) {
+  .mission-card-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

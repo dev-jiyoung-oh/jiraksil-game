@@ -56,36 +56,15 @@
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 핸들 바 — 모바일에서만 표시 */
-.footer-handle {
+/* 풀스크린 모드: 푸터 숨김 */
+.is-fullscreen .footer {
   display: none;
-  width: 40px;
-  height: 4px;
-  background: #ccc;
-  border-radius: 2px;
-  margin: 8px auto 0;
-  border: none;
-  cursor: pointer;
-  padding: 0;
 }
 
 /* ============================
    반응형 — 768px 이하
    ============================ */
 @media (max-width: 768px) {
-  .footer--drawer {
-    transform: translateY(calc(100% - 28px));
-    transition: transform 0.3s ease;
-  }
-
-  .footer--drawer.footer--open {
-    transform: translateY(0);
-  }
-
-  .footer--drawer .footer-handle {
-    display: block;
-  }
-
   .footer-inner {
     flex-direction: column;
     align-items: center;
