@@ -19,20 +19,23 @@ export function useFullscreen() {
     return () => document.removeEventListener("fullscreenchange", onChange);
   }, []);
 
+  const enter = useCallback(async () => {
+    if (document.fullscreenElement) return;
+    try {
+      await document.documentElement.requestFullscreen();
+    } catch {
+      setIsFullscreen(true);
+      document.documentElement.classList.add(FULLSCREEN_CLASS);
+    }
+  }, []);
+
   const toggle = useCallback(async () => {
     if (!document.fullscreenElement) {
-      try {
-        await document.documentElement.requestFullscreen();
-      } catch {
-        // iOS Safari doesn't support Fullscreen API — fallback to class toggle
-        const next = !isFullscreen;
-        setIsFullscreen(next);
-        document.documentElement.classList.toggle(FULLSCREEN_CLASS, next);
-      }
+      await enter();
     } else {
       await document.exitFullscreen();
     }
-  }, [isFullscreen]);
+  }, [enter]);
 
-  return { isFullscreen, toggle };
+  return { isFullscreen, toggle, enter };
 }

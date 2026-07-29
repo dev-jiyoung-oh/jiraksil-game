@@ -1,6 +1,5 @@
 .footer {
-  border-top: 2px solid #e7e7e7;
-  background: #ffffff;
+  background: #f0f0f0;
 }
 
 .footer-inner {
@@ -9,11 +8,6 @@
   justify-content: space-between;
   padding: 0.7rem 1.2rem;
   gap: 1rem;
-}
-
-.footer-logo {
-  text-decoration: none;
-  flex-shrink: 0;
 }
 
 .footer-links {
@@ -44,19 +38,8 @@
   color: var(--color-primary);
 }
 
-/* ============================
-   플레이 페이지: fixed 고정
-   ============================ */
-.footer--fixed {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 40;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-}
-
 /* 풀스크린 모드: 푸터 숨김 */
+:fullscreen .footer,
 .is-fullscreen .footer {
   display: none;
 }

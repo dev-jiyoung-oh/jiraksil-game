@@ -8,6 +8,26 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+/* ============================
+   풀스크린: 전체 스크롤 잠금
+   ============================ */
+.is-fullscreen,
+.is-fullscreen body {
+  overflow: hidden;
+  height: 100dvh;
+}
+
+.is-fullscreen #root {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.is-fullscreen .app-main {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .logo {

@@ -37,6 +37,7 @@ export default function Header() {
   const { showToast } = useToast();
   const { user, clearUser } = useAuth();
   const { pathname } = useLocation();
+  const headerRef = useRef<HTMLElement>(null);
 
   const menuRefs = {
     WAKE_UP_MISSION: useRef<HTMLLIElement>(null),
@@ -47,6 +48,18 @@ export default function Header() {
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
+
+  // 헤더 높이를 CSS 변수로 설정 (오버레이 위치 계산용)
+  useEffect(() => {
+    const update = () => {
+      const h = headerRef.current?.offsetHeight ?? 0;
+      document.documentElement.style.setProperty("--header-height", `${h}px`);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    if (headerRef.current) ro.observe(headerRef.current);
+    return () => ro.disconnect();
+  }, []);
 
   // 모바일 메뉴 열릴 때 스크롤 잠금
   useEffect(() => {
@@ -119,7 +132,7 @@ export default function Header() {
   };
 
   return (
-    <header className="app-header" role="banner">
+    <header ref={headerRef} className="app-header" role="banner">
       <div className="header-row">
         <Link to="/" aria-label="지락실 홈으로 이동">
           <AppLogo size="base" />

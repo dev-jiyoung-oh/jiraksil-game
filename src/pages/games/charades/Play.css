@@ -1,9 +1,8 @@
-/* 플레이 페이지 컨테이너: 상하 패딩 축소, 하단은 fixed 푸터 높이만큼 여백 */
+/* 플레이 페이지 컨테이너: 상하 패딩 축소 */
 .page-container-wide:has(.play-layout) {
   padding-top: 0.5rem;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
-  padding-bottom: var(--footer-height, 0px);
 }
 
 /* 세로 모드: 레이아웃을 수직 중앙에 배치 */
@@ -129,12 +128,12 @@
 /* ── 턴 시작 전 오버레이 ── */
 
 .play-start-overlay {
-  position: fixed;
-  top: var(--header-height, 0px);
+  position: absolute;
+  top: 0;
   left: 0;
   right: 0;
-  bottom: var(--footer-height, 0px);
-  z-index: 49; /* 헤더(50) 아래 */
+  bottom: 0;
+  z-index: 49;
   display: flex;
   align-items: center;
   justify-content: center;

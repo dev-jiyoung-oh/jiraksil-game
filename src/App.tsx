@@ -29,9 +29,9 @@ function AppContent() {
           <Route path="/game/charades/*" element={<CharadesRouter />} />
           <Route path="/mypage" element={<MyPage />} />
         </Routes>
+        {isPlayPage && <FullscreenButton />}
       </main>
       <Footer />
-      {isPlayPage && <FullscreenButton />}
     </>
   );
 }

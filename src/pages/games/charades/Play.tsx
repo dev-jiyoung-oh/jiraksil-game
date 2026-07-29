@@ -2,6 +2,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { getGameDetail } from "@/api/charades";
 import { useGameAccess } from "@/hooks/common/useGameAccess";
 import { useCharadesGame } from "@/hooks/charades/useCharadesGame";
+import { useFullscreen } from "@/hooks/common/useFullscreen";
 
 import GameAccessModal from "@/components/common/GameAccessModal";
 import WordCard from "@/components/charades/WordCard";
@@ -69,6 +70,7 @@ export default function Play() {
     gameData?.teams.find((t) => t.code === currentTurn?.teamCode) ||
     currentInfo.team;
 
+  const { enter: enterFullscreen } = useFullscreen();
   const canPass = (currentTurn?.usedPass ?? 0) < (gameData?.passLimit ?? 0);
 
   // 관리 화면으로 이동
@@ -231,7 +233,7 @@ export default function Play() {
               <button
                 type="button"
                 className="btn btn-start play-start-overlay__btn"
-                onClick={handleStartTurn}
+                onClick={() => { enterFullscreen(); handleStartTurn(); }}
               >
                 <IconPlay size="1.5em" />
                 시작
