@@ -22,7 +22,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100dvh - 80px); /* 헤더 높이 제외 */
+  flex: 1;
   padding: var(--spacing-lg);
   box-sizing: border-box;
 }
