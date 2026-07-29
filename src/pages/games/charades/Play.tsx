@@ -4,10 +4,14 @@ import { useGameAccess } from "@/hooks/common/useGameAccess";
 import { useCharadesGame } from "@/hooks/charades/useCharadesGame";
 
 import GameAccessModal from "@/components/common/GameAccessModal";
-import Timer from "@/components/charades/Timer";
 import WordCard from "@/components/charades/WordCard";
 import TurnInfoBar from "@/components/charades/TurnInfoBar";
 import RoundModal from "@/components/charades/RoundModal";
+import IconPlay from "@/components/icons/IconPlay";
+import IconPause from "@/components/icons/IconPause";
+import IconStop from "@/components/icons/IconStop";
+import IconCheck from "@/components/icons/IconCheck";
+import IconUndo from "@/components/icons/IconUndo";
 
 import type { GameInfoDto } from "@/types/charades";
 
@@ -106,29 +110,43 @@ export default function Play() {
               </div>
             </section>
 
-            {/* 턴 정보 */}
+            {/* 팀 & 라운드 */}
+            <div className="area-team">
+              <span className="area-team__name">{currentTeam.name}</span>
+              <div className="play-stat">
+                <span className="play-stat__label">라운드</span>
+                <span className="play-stat__value">{currentInfo.roundIdx + 1}</span>
+              </div>
+            </div>
+
+            {/* 타이머 */}
             <section className="area-info">
               <h3 className="sr-only">현재 진행 상황</h3>
               <TurnInfoBar
                 mode={gameData.mode}
-                teamName={currentTeam.name}
-                roundIndex={currentInfo.roundIdx + 1}
-                correctCount={currentTurn?.correctCount ?? 0}
-                usedPass={currentTurn?.usedPass ?? 0}
-                passLimit={gameData.passLimit}
-                targetCount={gameData.targetCount ?? undefined}
+                timerSec={timerSec}
+                durationSec={gameData.durationSec}
+                hasTurn={!!currentTurn}
+                isRunning={isRunning}
+                onPauseResume={currentTurn ? (isRunning ? handlePauseTurn : handleRestartTurn) : undefined}
+                onEndTurn={currentTurn ? handleEndTurn : undefined}
               />
             </section>
 
-            {/* 타이머 */}
-            <section className="area-timer">
-              <h3 className="sr-only">타이머</h3>
-              <Timer
-                mode={gameData.mode}
-                sec={timerSec}
-                durationSec={gameData.durationSec}
-              />
-            </section>
+            {/* 정답 & 패스 */}
+            <div className="area-score">
+              <div className="play-stat">
+                <span className="play-stat__label">정답</span>
+                <span className="play-stat__value">
+                  {currentTurn?.correctCount ?? 0}
+                  {gameData.mode === "UNTIL_CLEAR" && gameData.targetCount != null && ` / ${gameData.targetCount}`}
+                </span>
+              </div>
+              <div className="play-stat">
+                <span className="play-stat__label">패스</span>
+                <span className="play-stat__value">{currentTurn?.usedPass ?? 0} / {gameData.passLimit}</span>
+              </div>
+            </div>
 
             {/* 제시어 스케치북 */}
             <section className="area-word">
@@ -148,7 +166,8 @@ export default function Play() {
                 onClick={handleCorrect}
                 disabled={!isRunning}
               >
-                ✅ 정답
+                <IconCheck size="1.2em" />
+                정답
               </button>
             </div>
 
@@ -160,43 +179,65 @@ export default function Play() {
                 onClick={handlePass}
                 disabled={!isRunning || !canPass}
               >
-                ↩ 패스
+                <IconUndo size="1.2em" />
+                패스
               </button>
             </div>
 
-            {/* 시작 / 일시정지 */}
-            <div className="area-start">
-              {!isRunning ? (
-                <button
-                  type="button"
-                  className="btn btn-large btn-start play-ctrl-btn"
-                  onClick={currentTurn ? handleRestartTurn : handleStartTurn}
-                >
-                  ▶ 시작
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="btn btn-large btn-pause play-ctrl-btn"
-                  onClick={handlePauseTurn}
-                >
-                  ⏸ 일시정지
-                </button>
-              )}
-            </div>
+            {/* 일시정지 / 재시작 — 턴 진행 중에만 표시 */}
+            {currentTurn && (
+              <div className="area-start">
+                {!isRunning ? (
+                  <button
+                    type="button"
+                    className="btn btn-large btn-start play-ctrl-btn"
+                    onClick={handleRestartTurn}
+                  >
+                    <IconPlay size="1.2em" />
+                    재시작
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-large btn-pause play-ctrl-btn"
+                    onClick={handlePauseTurn}
+                  >
+                    <IconPause size="1.2em" />
+                    일시정지
+                  </button>
+                )}
+              </div>
+            )}
 
-            {/* 턴 종료 */}
-            <div className="area-end">
+            {/* 턴 종료 — 턴 진행 중에만 표시 */}
+            {currentTurn && (
+              <div className="area-end">
+                <button
+                  type="button"
+                  className="btn btn-large btn-end play-ctrl-btn"
+                  onClick={handleEndTurn}
+                  disabled={!isRunning}
+                >
+                  <IconStop size="1.2em" />
+                  턴 종료
+                </button>
+              </div>
+            )}
+          </main>
+
+          {/* 턴 시작 전 전체화면 오버레이 */}
+          {!currentTurn && !isRunning && (
+            <div className="play-start-overlay">
               <button
                 type="button"
-                className="btn btn-large btn-end play-ctrl-btn"
-                onClick={handleEndTurn}
-                disabled={!isRunning}
+                className="btn btn-start play-start-overlay__btn"
+                onClick={handleStartTurn}
               >
-                ⏹ 턴 종료
+                <IconPlay size="1.5em" />
+                시작
               </button>
             </div>
-          </main>
+          )}
 
           {/* 턴 종료 / 최종 결과 모달 */}
           {showModal && (

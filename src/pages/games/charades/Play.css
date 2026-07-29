@@ -1,3 +1,21 @@
+/* 플레이 페이지 컨테이너: 상하 패딩 축소, 하단은 fixed 푸터 높이만큼 여백 */
+.page-container-wide:has(.play-layout) {
+  padding-top: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-bottom: var(--footer-height, 0px);
+}
+
+/* 세로 모드: 레이아웃을 수직 중앙에 배치 */
+@media (orientation: portrait) {
+  .page-container-wide:has(.play-layout) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
 /* =============================================
    플레이 레이아웃 - CSS Grid
    모바일/패드: [정답] [스케치북] [패스] 사이드 배치
@@ -6,18 +24,17 @@
 
 .play-layout {
   display: grid;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
   column-gap: var(--spacing-sm);
 
-  /* 모바일/패드: 사이드 버튼 1fr | 카드 auto | 사이드 버튼 1fr */
+  /* 사이드 1fr | 카드 auto | 사이드 1fr */
   grid-template-columns: 1fr auto 1fr;
   grid-template-areas:
     "toolbar  toolbar  toolbar"
-    "info     info     info"
-    "timer    timer    timer"
+    "team     info     score"
     "correct  word     pass"
-    "start    start    start"
-    "end      end      end";
+    ".        start    ."
+    ".        end      .";
 }
 
 /* ── 그리드 영역 배치 ── */
@@ -35,14 +52,36 @@
   }
 }
 
+.area-team {
+  grid-area: team;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
+
+  .area-team__name {
+    font-weight: bold;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
+  }
+}
+
 .area-info {
   grid-area: info;
 }
 
-.area-timer {
-  grid-area: timer;
+.area-score {
+  grid-area: score;
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   justify-content: center;
+  gap: 0.5rem;
+  text-align: right;
 }
 
 .area-word {
@@ -78,6 +117,40 @@
   justify-content: center;
 }
 
+/* ── 정보 stat 공통 ── */
+
+.play-stat {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+/* ── 턴 시작 전 오버레이 ── */
+
+.play-start-overlay {
+  position: fixed;
+  top: var(--header-height, 0px);
+  left: 0;
+  right: 0;
+  bottom: var(--footer-height, 0px);
+  z-index: 49; /* 헤더(50) 아래 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.play-start-overlay__btn {
+  font-size: 2rem;
+  font-weight: 700;
+  padding: 1.5rem 4rem;
+  border-radius: 16px;
+  color: white;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
 /* ── 버튼 스타일 ── */
 
 /* 정답 / 패스: 스케치북 양 옆에 붙는 액션 버튼 */
@@ -85,10 +158,12 @@
   width: 100%;
   height: 100%;
   min-height: 80px;
-  font-size: clamp(0.9rem, 2.8vw, 1.15rem);
+  font-size: var(--font-size-large);
   font-weight: bold;
   border-radius: 12px;
   color: white;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
 /* 시작·일시정지·턴종료: 하단 컨트롤 버튼 */
@@ -96,6 +171,7 @@
   width: 100%;
   max-width: 320px;
   color: white;
+  gap: 0.4rem;
 }
 
 /* ── 버튼 색상 ── */
@@ -121,6 +197,53 @@
 }
 
 /* =============================================
+   풀스크린: 스크롤 없이 화면에 맞춤
+   ============================================= */
+
+:fullscreen .page-container-wide,
+.is-fullscreen .page-container-wide {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0.25rem 0.25rem 0;
+}
+
+:fullscreen .play-layout,
+.is-fullscreen .play-layout {
+  overflow: hidden;
+  gap: 0.25rem;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: auto auto 1fr auto auto;
+  grid-template-areas:
+    "toolbar  toolbar  toolbar"
+    "team     info     score"
+    "correct  word     pass"
+    ".        start    ."
+    ".        end      .";
+}
+
+/* 스케치북: 스프링 잘림 방지 */
+:fullscreen .area-word,
+.is-fullscreen .area-word {
+  overflow: visible;
+  min-height: 0;
+}
+
+/* 풀스크린 버튼: 열 전체 너비/높이 채움 */
+:fullscreen .play-action-btn,
+.is-fullscreen .play-action-btn {
+  min-height: unset;
+  height: 100%;
+}
+
+:fullscreen .play-ctrl-btn,
+.is-fullscreen .play-ctrl-btn {
+  max-width: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* =============================================
    모바일/패드 (< 1024px): 관리 버튼 숨김
    ============================================= */
 
@@ -135,22 +258,34 @@
 }
 
 /* =============================================
+   가로 모드: 일시정지·턴종료가 TurnInfoBar로 이동하므로
+   area-start / area-end 숨김
+   ============================================= */
+
+@media (orientation: landscape) {
+  .area-start,
+  .area-end {
+    display: none;
+  }
+}
+
+/* =============================================
    PC 레이아웃 (≥1024px)
    스케치북 좌 / 컨트롤(시작, 정답, 패스, 턴종료) 우
    ============================================= */
 
 @media (min-width: 1024px) {
   .play-layout {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto 1fr;
     column-gap: var(--spacing-xl);
     row-gap: var(--spacing-md);
     grid-template-areas:
-      "toolbar toolbar"
-      "info    info"
-      "timer   start"
-      "word    correct"
-      "word    pass"
-      "word    end";
+      "toolbar  toolbar  toolbar"
+      "team     info     score"
+      "word     word     start"
+      "word     word     correct"
+      "word     word     pass"
+      "word     word     end";
     align-items: center;
   }
 

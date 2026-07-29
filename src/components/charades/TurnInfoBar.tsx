@@ -1,59 +1,68 @@
+import Timer from "@/components/charades/Timer";
+import IconPlay from "@/components/icons/IconPlay";
+import IconPause from "@/components/icons/IconPause";
+import IconStop from "@/components/icons/IconStop";
 import "./TurnInfoBar.css";
 import type { GameMode } from "@/types/charades";
 
 interface TurnInfoBarProps {
   mode: GameMode;
-  teamName: string;
-  roundIndex: number;
-  passLimit: number;
+  timerSec: number;
+  durationSec?: number | null;
 
-  // 턴 진행 정보
-  correctCount: number;
-  usedPass: number;
-
-  // UNTIL_CLEAR 전용
-  targetCount?: number;
+  // 가로 모드 전용: 일시정지/재시작·턴종료 버튼
+  hasTurn?: boolean;
+  isRunning?: boolean;
+  onPauseResume?: () => void;
+  onEndTurn?: () => void;
 }
 
 /**
- * 몸으로 말해요 - 턴 진행 정보 표시 바
+ * 몸으로 말해요 - 타이머 바
  *
- * - 팀 이름 + 라운드
- * - 정답 / 패스
- * - UNTIL_CLEAR 모드일 경우 목표 정답 표시
+ * 팀/라운드·정답/패스 정보는 play 레이아웃의 area-team·area-score 에서 담당.
+ * 가로 모드: 타이머 양옆에 일시정지/재시작·턴종료 버튼 표시.
  */
 export default function TurnInfoBar({
   mode,
-  teamName,
-  roundIndex,
-  passLimit,
-  correctCount,
-  usedPass,
-  targetCount,
+  timerSec,
+  durationSec,
+  hasTurn,
+  isRunning,
+  onPauseResume,
+  onEndTurn,
 }: TurnInfoBarProps) {
   return (
     <div className="turn-info-bar">
-      {/* 팀 & 라운드 정보 */}
-      <div className="turn-info-bar__group">
-        <span className="turn-info-bar__team">{teamName}</span>
-        <span className="turn-info-bar__round">Round {roundIndex}</span>
+      {/* 일시정지 / 재시작 */}
+      <div className="tib-ctrl">
+        {hasTurn && (
+          <button
+            type="button"
+            className={`tib-ctrl-btn ${isRunning ? "tib-ctrl-btn--pause" : "tib-ctrl-btn--resume"}`}
+            onClick={onPauseResume}
+            aria-label={isRunning ? "일시정지" : "재시작"}
+          >
+            {isRunning ? <IconPause /> : <IconPlay />}
+          </button>
+        )}
       </div>
 
-      {/* 정답 / 패스 */}
-      <div className="turn-info-bar__group">
-        <div className="stat">
-          <span className="stat__label">정답</span>
-          <span className="stat__value">{correctCount}</span>
-          {mode === "UNTIL_CLEAR" && targetCount !== undefined && (
-            <span className="stat__extra"> / {targetCount}</span>
-          )}
-        </div>
+      <Timer mode={mode} sec={timerSec} durationSec={durationSec} />
 
-        <div className="stat">
-          <span className="stat__label">패스</span>
-          <span className="stat__value">{usedPass}</span>
-          <span className="stat__extra"> / {passLimit}</span>
-        </div>
+      {/* 턴 종료 */}
+      <div className="tib-ctrl">
+        {hasTurn && (
+          <button
+            type="button"
+            className="tib-ctrl-btn tib-ctrl-btn--end"
+            onClick={onEndTurn}
+            disabled={!isRunning}
+            aria-label="턴 종료"
+          >
+            <IconStop />
+          </button>
+        )}
       </div>
     </div>
   );

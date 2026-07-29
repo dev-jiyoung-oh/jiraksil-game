@@ -42,8 +42,8 @@
       content: '';
       position: absolute;
       top: -11px;
-      left: 8%;
-      right: 8%;
+      left: var(--spring-left, 8%);
+      right: var(--spring-right, 8%);
       height: 22px;
       pointer-events: none;
       z-index: 2;
