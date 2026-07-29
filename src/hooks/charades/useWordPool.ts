@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { getWordBatch } from "@/api/charades";
 import type { WordDto } from "@/types/charades";
 
+const WORD_BUFFER_SIZE = 50; // 단어 로딩 버퍼 크기 - 남은 단어 이하일 때 트리거
+const WORD_BATCH_SIZE = 300; // 단어 배치 조회 크기 - 한 번에 조회할 배치 단어 수
+
 interface UseWordPoolParams {
   gameCode: string | undefined;
   /** true일 때만 단어 로딩 시작 (인증 완료 후) */
@@ -38,16 +41,23 @@ export function useWordPool({
     setIsLoadingWords(true);
 
     try {
+      // 이미 로드된 단어 제외
       const exclude = words.length > 0 ? words.map((w) => w.id) : undefined;
-      const batch = await getWordBatch(gameCode, { exclude });
+      
+      // 단어 배치 조회
+      const batch = await getWordBatch(gameCode, { limit: WORD_BATCH_SIZE, exclude });
 
-      // TODO limit 미만으로 변경
-      if (batch.words.length === 0) {
+      // 단어 배치 조회 결과가 있으면 추가
+      if (batch.words.length > 0) {
+        setWords((prev) => [...prev, ...batch.words]);
+      } else {
+        // 단어 배치 조회 결과가 없으면 noMoreWords 설정
         setNoMoreWords(true);
-        return;
       }
+    } catch (error) {
+      // 에러 시 noMoreWords는 false 유지 → 자동 로딩 트리거가 재시도 가능
+      console.error(error);
 
-      setWords((prev) => [...prev, ...batch.words]);
     } finally {
       isLoadingRef.current = false;
       setIsLoadingWords(false);
@@ -65,7 +75,7 @@ export function useWordPool({
   // 단어 부족 시 자동 로딩
   useEffect(() => {
     if (!words.length || noMoreWords) return;
-    if (wordIdx < words.length - 50) return;
+    if (wordIdx < words.length - WORD_BUFFER_SIZE) return;
 
     loadMoreWords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
