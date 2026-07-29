@@ -3,6 +3,7 @@ import { getGameData } from "@/api/wakeUpMission";
 import { useGameAccess } from '@/hooks/common/useGameAccess';
 import MissionCardList from '@/components/wake-up-mission/MissionCardList';
 import GameAccessModal from '@/components/common/GameAccessModal';
+import CopyButton from '@/components/common/CopyButton';
 import type { WakeUpMissionGame, WakeUpMissionGameViewModel } from '@/types/wakeUpMission';
 import { formatDateTime } from '@/utils/date';
 
@@ -80,6 +81,10 @@ export default function Manage() {
 
       {isVerified && gameData && (
         <div className="flex-column manage-contents">
+          <div className="flex" style={{ alignItems: 'center', gap: '0.5rem' }}>
+            <span>게임 코드: {gameCode}</span>
+            <CopyButton text={gameCode!} />
+          </div>
           {gameData.wakeUpTime && <p>기상시간: {formatDateTime(gameData.wakeUpTime)}</p>}
           {gameData.contacts && gameData.contacts.length > 0 && (
             <div>
