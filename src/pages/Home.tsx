@@ -1,28 +1,16 @@
 import { Link } from 'react-router-dom';
+import { GAME_META } from '@/types/common';
 import './Home.css';
-
-const games = [
-  {
-    id: 'wake-up-mission',
-    name: '자네 지금 뭐 하는 건가',
-    description: '기상 미션 수행 게임'
-  },
-  {
-    id: 'charades',
-    name: '몸으로 말해요',
-    description: '제시어를 몸으로 표현하는 게임'
-  }
-];
 
 export default function Home() {
   return (
     <div className="page-container-wide">
       <h1 className="page-title">지구오락실 게임 선택</h1>
       <ul className="game-card-list">
-        {games.map((game) => (
+        {GAME_META.map((game) => (
           <li key={game.id}>
             <Link to={`/game/${game.id}`} className="game-card">
-              <h3>{game.name}</h3>
+              <h3>{game.label}</h3>
               <p>{game.description}</p>
             </Link>
           </li>

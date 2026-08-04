@@ -5,29 +5,19 @@ import ChevronDown from "@/components/icons/ChevronDown";
 import { logout } from "@/api/auth";
 import { useAuth } from "@/hooks/common/useAuth";
 import { useToast } from "@/components/common/toast/useToast";
+import { GAME_META } from "@/types/common";
 import type { GameType } from "@/types/common";
 import "./Header.css";
 
-const MENUS: { key: GameType; label: string; items: { to: string; label: string }[] }[] = [
-  {
-    key: "WAKE_UP_MISSION",
-    label: "자네 지금 뭐 하는 건가",
-    items: [
-      { to: "/game/wake-up-mission/new", label: "게임 생성" },
-      { to: "/game/wake-up-mission/play", label: "게임 플레이" },
-      { to: "/game/wake-up-mission/manage", label: "게임 관리" },
-    ],
-  },
-  {
-    key: "CHARADES",
-    label: "몸으로 말해요",
-    items: [
-      { to: "/game/charades/new", label: "게임 생성" },
-      { to: "/game/charades/play", label: "게임 플레이" },
-      { to: "/game/charades/manage", label: "게임 관리" },
-    ],
-  },
-];
+const MENUS = GAME_META.map((g) => ({
+  key: g.key,
+  label: g.label,
+  items: [
+    { to: `/game/${g.id}/new`, label: "게임 생성" },
+    { to: `/game/${g.id}/play`, label: "게임 플레이" },
+    { to: `/game/${g.id}/manage`, label: "게임 관리" },
+  ],
+}));
 
 export default function Header() {
   const [openMenu, setOpenMenu] = useState<GameType | null>(null);
