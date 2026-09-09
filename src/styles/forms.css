@@ -80,3 +80,9 @@
   flex: 1;
 }
 
+.form-error {
+  font-size: var(--font-size-small);
+  color: var(--color-danger);
+  margin-top: 0.25rem;
+}
+

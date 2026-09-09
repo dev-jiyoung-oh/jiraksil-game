@@ -1,5 +1,7 @@
 /* input 기본 스타일 */
 .input,
+.form-input,
+.form-textarea,
 .form input,
 .form-group input,
 input[type="text"],
@@ -20,6 +22,8 @@ textarea {
 }
 
 .input:focus,
+.form-input:focus,
+.form-textarea:focus,
 .form input:focus,
 .form-group input:focus,
 input[type="text"]:focus,

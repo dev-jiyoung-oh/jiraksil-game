@@ -10,6 +10,11 @@ import Signup from '@/pages/Signup';
 import WakeUpMissionRouter from '@/pages/games/wake-up-mission/Router';
 import CharadesRouter from '@/pages/games/charades/Router';
 import MyPage from '@/pages/MyPage';
+import Suggest from '@/pages/Suggest';
+import InquiryList from '@/pages/inquiry/List';
+import InquiryNew from '@/pages/inquiry/New';
+import InquiryDetail from '@/pages/inquiry/Detail';
+import AdminRouter from '@/pages/admin/Router';
 import './App.css';
 
 function AppContent() {
@@ -28,6 +33,11 @@ function AppContent() {
           <Route path="/game/wake-up-mission/*" element={<WakeUpMissionRouter />} />
           <Route path="/game/charades/*" element={<CharadesRouter />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/suggest" element={<Suggest />} />
+          <Route path="/inquiry" element={<InquiryList />} />
+          <Route path="/inquiry/new" element={<InquiryNew />} />
+          <Route path="/inquiry/:id" element={<InquiryDetail />} />
+          <Route path="/admin/*" element={<AdminRouter />} />
         </Routes>
         {isPlayPage && <FullscreenButton />}
       </main>

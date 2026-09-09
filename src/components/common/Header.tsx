@@ -174,6 +174,14 @@ export default function Header() {
             </ul>
           </nav>
 
+          <div className="header-extra-links">
+            <Link to="/suggest" className="header-extra-link">미션 제안</Link>
+            <Link to="/inquiry" className="header-extra-link">문의</Link>
+            {user?.role === "ADMIN" && (
+              <Link to="/admin" className="header-extra-link header-extra-link--admin">관리자</Link>
+            )}
+          </div>
+
           <div className="header-auth">
             {user ? (
               <>
@@ -236,6 +244,17 @@ export default function Header() {
               </>
             )}
           </div>
+
+          <hr className="mobile-panel-divider" />
+
+          {/* 부가 메뉴 */}
+          <nav aria-label="모바일 부가 메뉴" className="mobile-extra-nav">
+            <Link to="/suggest" onClick={closeMobileMenu}>미션 제안</Link>
+            <Link to="/inquiry" onClick={closeMobileMenu}>문의</Link>
+            {user?.role === "ADMIN" && (
+              <Link to="/admin" onClick={closeMobileMenu} className="mobile-admin-link">관리자</Link>
+            )}
+          </nav>
 
           <hr className="mobile-panel-divider" />
 

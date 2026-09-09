@@ -1,0 +1,28 @@
+.suggest-title {
+  margin-bottom: 0.5rem;
+}
+
+.suggest-desc {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.suggest-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 600px;
+}
+
+.suggest-game-types {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
