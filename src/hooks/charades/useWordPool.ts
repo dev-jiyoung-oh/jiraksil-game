@@ -34,6 +34,12 @@ export function useWordPool({
 
   const isLoadingRef = useRef(false);
 
+  // words의 최신 값을 loadMoreWords가 재생성되지 않고도 참조할 수 있도록 동기화
+  const wordsRef = useRef<WordDto[]>(words);
+  useEffect(() => {
+    wordsRef.current = words;
+  }, [words]);
+
   const loadMoreWords = useCallback(async () => {
     if (isLoadingRef.current || !gameCode || noMoreWords) return;
 
@@ -42,8 +48,9 @@ export function useWordPool({
 
     try {
       // 이미 로드된 단어 제외
-      const exclude = words.length > 0 ? words.map((w) => w.id) : undefined;
-      
+      const currentWords = wordsRef.current;
+      const exclude = currentWords.length > 0 ? currentWords.map((w) => w.id) : undefined;
+
       // 단어 배치 조회
       const batch = await getWordBatch(gameCode, { limit: WORD_BATCH_SIZE, exclude });
 
@@ -62,7 +69,7 @@ export function useWordPool({
       isLoadingRef.current = false;
       setIsLoadingWords(false);
     }
-  }, [gameCode, noMoreWords, words]);
+  }, [gameCode, noMoreWords]);
 
   // 인증 완료 후 최초 로딩
   useEffect(() => {
