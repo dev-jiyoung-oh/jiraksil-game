@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext, type AuthUser } from "@/hooks/common/useAuth";
-import { registerUnauthorizedHandler, isAxiosError } from "@/api/api";
+import { registerUnauthorizedHandler } from "@/api/api";
 import { getMe } from "@/api/user";
+import { ApiError } from "@/types/api";
 
 function getStoredUser(): AuthUser | null {
   const storedUser = localStorage.getItem("user");
@@ -47,7 +48,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       .then((me) => setUser(me))   // 200: 서버의 최신 유저 정보로 갱신
       .catch((err) => {
         // 401(쿠키 만료/무효)일 때만 로그아웃, 네트워크 오류 등은 기존 상태 유지
-        if (isAxiosError(err) && err.response?.status === 401) {
+        if (err instanceof ApiError && err.status === 401) {
           clearUser();
         }
       });

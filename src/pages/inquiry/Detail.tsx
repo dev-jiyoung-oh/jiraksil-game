@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getInquiryDetail } from "@/api/inquiry";
-import { isAxiosError } from "@/api/api";
-import { ERROR_CODE, type ApiErrorResponse } from "@/types/api";
+import { ApiError, ERROR_CODE } from "@/types/api";
 import type { InquiryDetail as InquiryDetailType } from "@/types/inquiry";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import "./Inquiry.css";
@@ -31,7 +30,7 @@ export default function InquiryDetail() {
       setDetail(data);
       setNeedsPassword(false);
     } catch (err: unknown) {
-      const code = isAxiosError<ApiErrorResponse>(err) ? err.response?.data?.code : undefined;
+      const code = err instanceof ApiError ? err.code : undefined;
       if (code === ERROR_CODE.PASSWORD_MISMATCH) {
         setNeedsPassword(true);
         if (pw) {

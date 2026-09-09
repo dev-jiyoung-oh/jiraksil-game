@@ -1,5 +1,5 @@
-import axios, { AxiosError } from "axios";
-import { ERROR_CODE, type ApiErrorResponse } from "@/types/api";
+import axios from "axios";
+import { ApiError, ERROR_CODE, type ApiErrorResponse } from "@/types/api";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -20,29 +20,15 @@ export function registerUnauthorizedHandler(handler: () => void): void {
     unauthorizedHandler = handler;
 }
 
-/**
- * 호출부가 isAxiosError로 원본 응답을 직접 판단해야 하는 엔드포인트.
- * (메시지 변환 없이 원본 AxiosError를 그대로 전파)
- */
-const RAW_ERROR_PATTERNS = [
-    /^\/inquiries\/[^/]+$/, // getInquiryDetail — Detail.tsx가 응답의 code 필드를 직접 판단
-];
-
-function matches(patterns: RegExp[], url: string | undefined): boolean {
-    if (!url) return false;
-    return patterns.some((pattern) => pattern.test(url));
-}
-
 // 응답 인터셉터
 api.interceptors.response.use(
     undefined, // 성공은 그대로
     (error) => {
         if (axios.isAxiosError<ApiErrorResponse>(error)) {
             const status = error.response?.status;
-            const url = error.config?.url;
             const code = error.response?.data?.code;
 
-            const isSessionCheck = url === "/users/me";
+            const isSessionCheck = error.config?.url === "/users/me";
             const isPasswordMismatch = code === ERROR_CODE.PASSWORD_MISMATCH;
 
             // 401: 세션 없음/만료(code: "UNAUTHORIZED") → 로그아웃 처리
@@ -55,23 +41,14 @@ api.interceptors.response.use(
 
             // 403: 권한 없음 → 로그인 여부와 무관하므로 강제 로그아웃 하지 않음
 
-            // /users/me, 비밀글 조회 등은 호출부가 원본 응답으로 직접 판단해야 하므로 원본 에러 전파
-            if (isSessionCheck || matches(RAW_ERROR_PATTERNS, url)) {
-                return Promise.reject(error);
-            }
-
             const msg =
                 error.response?.data?.message ||
                 error.message ||
                 "요청 처리 중 오류가 발생했습니다.";
-            return Promise.reject(new Error(msg));
+            return Promise.reject(new ApiError(msg, { status, code }));
         }
         return Promise.reject(error);
     }
 );
-
-export function isAxiosError<T = unknown>(err: unknown): err is AxiosError<T> {
-    return axios.isAxiosError(err);
-}
 
 export default api;
