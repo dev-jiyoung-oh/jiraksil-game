@@ -53,7 +53,12 @@ export default function InquiryList() {
               >
                 <td>{item.id}</td>
                 <td className="inquiry-title-cell">
-                  {item.isPrivate && <span className="inquiry-lock">🔒</span>}
+                  {item.isPrivate && (
+                    <>
+                      <span className="inquiry-lock" aria-hidden="true">🔒</span>
+                      <span className="sr-only">비공개</span>
+                    </>
+                  )}
                   {item.isPrivate ? "비밀글입니다." : item.title}
                 </td>
                 <td>{item.authorName}</td>

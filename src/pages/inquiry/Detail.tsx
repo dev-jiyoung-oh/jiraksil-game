@@ -87,7 +87,12 @@ export default function InquiryDetail() {
       <div className="inquiry-detail">
         <div className="inquiry-detail-header">
           <h1 className="inquiry-detail-title">
-            {detail.isPrivate && <span className="inquiry-lock">🔒</span>}
+            {detail.isPrivate && (
+              <>
+                <span className="inquiry-lock" aria-hidden="true">🔒</span>
+                <span className="sr-only">비공개</span>
+              </>
+            )}
             {detail.title}
           </h1>
           <div className="inquiry-detail-meta">

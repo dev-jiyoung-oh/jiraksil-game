@@ -62,7 +62,12 @@ export default function AdminInquiries() {
               >
                 <td>{item.id}</td>
                 <td className="admin-content-cell">
-                  {item.isPrivate && "🔒 "}
+                  {item.isPrivate && (
+                    <>
+                      <span aria-hidden="true">🔒 </span>
+                      <span className="sr-only">비공개</span>
+                    </>
+                  )}
                   {item.title}
                 </td>
                 <td>{item.authorName}</td>

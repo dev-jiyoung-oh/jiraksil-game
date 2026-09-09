@@ -54,7 +54,12 @@ export default function AdminInquiryDetail() {
 
       <div className="inquiry-detail-header">
         <h2 className="inquiry-detail-title">
-          {detail.isPrivate && "🔒 "}
+          {detail.isPrivate && (
+            <>
+              <span aria-hidden="true">🔒 </span>
+              <span className="sr-only">비공개</span>
+            </>
+          )}
           {detail.title}
         </h2>
         <div className="inquiry-detail-meta">
