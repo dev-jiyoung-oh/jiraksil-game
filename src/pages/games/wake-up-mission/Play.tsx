@@ -1,6 +1,7 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getGameData } from "@/api/wakeUpMission";
 import { useGameAccess } from '@/hooks/common/useGameAccess';
+import { usePlayMissionToggle } from '@/hooks/wake-up-mission/useWakeUpMissionGame';
 import GameAccessModal from '@/components/common/GameAccessModal';
 import MissionCardList from '@/components/wake-up-mission/MissionCardList';
 import type { WakeUpMissionGame, WakeUpMissionGameViewModel } from '@/types/wakeUpMission';
@@ -41,27 +42,7 @@ export default function Play() {
     });
 
   // 카드 토글
-  const handleToggle = (assignedPlayer: number) => {
-    setGameData((prev) => {
-      if (!prev) return prev;
-
-      const target = prev.missions.find((m) => m.assignedPlayer === assignedPlayer);
-      if (!target || target.viewed) return prev;
-
-      const anyOpened = prev.missions.some((m) => m.opened);
-
-      return {
-        ...prev,
-        missions: prev.missions.map((m) =>
-          m.assignedPlayer === assignedPlayer
-            ? anyOpened
-              ? { ...m, opened: false, viewed: true } // 확인 완료
-              : { ...m, opened: true } // 열기
-            : m
-        ),
-      };
-    });
-  };
+  const { handleToggle } = usePlayMissionToggle(setGameData);
 
   return (
     <div className="page-container-wide">

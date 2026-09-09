@@ -1,6 +1,7 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getGameData } from "@/api/wakeUpMission";
 import { useGameAccess } from '@/hooks/common/useGameAccess';
+import { useManageMissionToggle } from '@/hooks/wake-up-mission/useWakeUpMissionGame';
 import MissionCardList from '@/components/wake-up-mission/MissionCardList';
 import GameAccessModal from '@/components/common/GameAccessModal';
 import CopyButton from '@/components/common/CopyButton';
@@ -35,33 +36,8 @@ export default function Manage() {
       transform: toManageViewModel,
     });
 
-  // 모든 미션 토글
-  const toggleAll = () => {
-    setGameData((prev) => {
-      if (!prev) return prev;
-
-      const allOpened = prev.missions.every((m) => m.opened);
-      return {
-        ...prev,
-        missions: prev.missions.map((m) => ({ ...m, opened: !allOpened })),
-      };
-    });
-  };
-
-  // 특정 미션 토글
-  const handleToggle = (assignedPlayer: number) => {
-    setGameData((prev) => {
-      if (!prev) return prev;
-
-      return {
-        ...prev,
-        missions: prev.missions.map((m) =>
-          m.assignedPlayer === assignedPlayer ? { ...m, opened: !m.opened } : m
-        )
-      };
-    });
-  };
-
+  // 전체/개별 미션 토글
+  const { toggleAll, handleToggle } = useManageMissionToggle(setGameData);
 
   return (
     <div className="page-container-narrow">
