@@ -6,7 +6,7 @@ import CopyButton from "@/components/common/CopyButton";
 import { updateProfile, changePassword, deleteAccount, getMyGames } from "@/api/user";
 import { GAME_MODE_LABEL, GAME_STATUS_LABEL } from "@/utils/charades/labels";
 import { formatDateTime } from "@/utils/date";
-import { GAME_TYPE_LABEL } from "@/utils/labels";
+import { GAME_LABELS } from "@/types/common";
 import type { MyGameSummary } from "@/types/user";
 import "./MyPage.css";
 
@@ -247,7 +247,7 @@ export default function MyPage() {
                     {game.code}
                     <CopyButton text={game.code} />
                   </td>
-                  <td>{GAME_TYPE_LABEL[game.gameType]}</td>
+                  <td>{GAME_LABELS[game.gameType]}</td>
                   <td>{game.mode ? GAME_MODE_LABEL[game.mode] : "-"}</td>
                   <td>
                     {game.status ? (

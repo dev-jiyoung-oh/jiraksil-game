@@ -2,14 +2,8 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/common/useAuth";
 import { useToast } from "@/components/common/toast/useToast";
 import { submitSuggestion } from "@/api/suggest";
-import { GAME_LABELS } from "@/types/common";
-import type { SuggestionGameType } from "@/types/suggest";
+import { SUGGESTION_GAME_TYPE_LABELS, type SuggestionGameType } from "@/types/suggest";
 import "./Suggest.css";
-
-const GAME_TYPE_LABELS: Record<SuggestionGameType, string> = {
-  ...GAME_LABELS,
-  OTHER: "기타",
-};
 
 export default function Suggest() {
   const { user } = useAuth();
@@ -47,7 +41,7 @@ export default function Suggest() {
         <div className="form-group">
           <label className="form-label">게임 종류</label>
           <div className="suggest-game-types">
-            {(Object.keys(GAME_TYPE_LABELS) as SuggestionGameType[]).map((type) => (
+            {(Object.keys(SUGGESTION_GAME_TYPE_LABELS) as SuggestionGameType[]).map((type) => (
               <label key={type} className="radio-label">
                 <input
                   type="radio"
@@ -56,7 +50,7 @@ export default function Suggest() {
                   checked={gameType === type}
                   onChange={() => setGameType(type)}
                 />
-                {GAME_TYPE_LABELS[type]}
+                {SUGGESTION_GAME_TYPE_LABELS[type]}
               </label>
             ))}
           </div>

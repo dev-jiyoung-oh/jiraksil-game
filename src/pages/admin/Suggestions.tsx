@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react";
 import { getAdminSuggestions } from "@/api/suggest";
-import { GAME_LABELS } from "@/types/common";
-import type { SuggestionDto, SuggestionGameType } from "@/types/suggest";
+import { SUGGESTION_GAME_TYPE_LABELS, type SuggestionDto, type SuggestionGameType } from "@/types/suggest";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import "./Admin.css";
-
-const GAME_TYPE_LABELS: Record<SuggestionGameType, string> = {
-  ...GAME_LABELS,
-  OTHER: "기타",
-};
 
 export default function AdminSuggestions() {
   const [items, setItems] = useState<SuggestionDto[]>([]);
@@ -33,8 +27,8 @@ export default function AdminSuggestions() {
           onChange={(e) => setFilter(e.target.value as SuggestionGameType | "")}
         >
           <option value="">전체</option>
-          {(Object.keys(GAME_TYPE_LABELS) as SuggestionGameType[]).map((type) => (
-            <option key={type} value={type}>{GAME_TYPE_LABELS[type]}</option>
+          {(Object.keys(SUGGESTION_GAME_TYPE_LABELS) as SuggestionGameType[]).map((type) => (
+            <option key={type} value={type}>{SUGGESTION_GAME_TYPE_LABELS[type]}</option>
           ))}
         </select>
       </div>
@@ -58,7 +52,7 @@ export default function AdminSuggestions() {
             {filtered.map((item) => (
               <tr key={item.id}>
                 <td>{item.id}</td>
-                <td>{GAME_TYPE_LABELS[item.gameType]}</td>
+                <td>{SUGGESTION_GAME_TYPE_LABELS[item.gameType]}</td>
                 <td className="admin-content-cell">{item.content}</td>
                 <td>{item.authorName}</td>
                 <td>{new Date(item.createdAt).toLocaleDateString("ko-KR")}</td>
