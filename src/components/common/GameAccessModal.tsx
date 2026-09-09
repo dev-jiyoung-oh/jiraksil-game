@@ -7,7 +7,7 @@ interface GameAccessModalProps {
   code?: string;
   requireCode?: boolean; // 코드 입력 필요 여부
   requirePassword?: boolean; // 비밀번호 입력 필요 여부
-  onSubmit: (code: string, password: string) => void;
+  onSubmit: (code: string, password: string) => Promise<void>;
   onClose: () => void;
   errorMessage?: string;
 }
@@ -55,7 +55,7 @@ export default function GameAccessModal({
   }, [onClose]);
 
   // 제출
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (requireCode && !code.trim()) {
@@ -75,7 +75,7 @@ export default function GameAccessModal({
 
     setLoading(true);
     try {
-      onSubmit(code.trim().toUpperCase(), password.trim());
+      await onSubmit(code.trim().toUpperCase(), password.trim());
     } finally {
       setLoading(false);
     }
