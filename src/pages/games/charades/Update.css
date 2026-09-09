@@ -58,33 +58,10 @@ legend {
   font-size: var(--font-size-base);
 }
 
-.update-form button[disabled] {
+.update-form button[type="submit"][disabled] {
   background-color: var(--color-success);
   opacity: 0.6;
   cursor: default;
-}
-
-.team-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.team-list li {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
-}
-
-.team-list input {
-  flex: 1;
-}
-
-.del-btn {
-  flex-shrink: 0;
 }
 
 .add-contact {

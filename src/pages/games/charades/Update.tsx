@@ -7,6 +7,7 @@ import type {
   GameMode,
 } from "@/types/charades";
 import { useToast } from "@/components/common/toast/useToast";
+import TeamOrderList, { type TeamRow } from "@/components/charades/TeamOrderList";
 import "./Update.css";
 
 /**
@@ -30,7 +31,13 @@ export default function CharadesUpdate() {
   const [passLimit, setPassLimit] = useState(initialData?.gameInfo.passLimit ?? 2);
   const [roundsPerTeam, setRoundsPerTeam] = useState(initialData?.gameInfo.roundsPerTeam ?? 1);
   const [password, setPassword] = useState("");
-  const [teams, setTeams] = useState<UpdateTeamDto[]>(initialData?.gameInfo.teams ?? []);
+  const [teamRows, setTeamRows] = useState<TeamRow[]>(() =>
+    (initialData?.gameInfo.teams ?? []).map((t) => ({
+      id: crypto.randomUUID(),
+      code: t.code,
+      name: t.name,
+    }))
+  );
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     initialData?.gameInfo.categories?.map((c) => c.code) ?? []
   );
@@ -60,33 +67,48 @@ export default function CharadesUpdate() {
   // 팀 추가
   const handleAddTeam = () => {
     clearError();
-    if (teams.length >= 26) {
+    if (teamRows.length >= 26) {
       setError("팀은 최대 26개까지 추가할 수 있습니다. (A~Z)");
       return;
     }
-    setTeams([...teams, {
-      code: null,
-      name: "",
-    }]);
+    setTeamRows((prev) => [...prev, { id: crypto.randomUUID(), code: null, name: "" }]);
   };
 
   // 팀 이름 변경
-  const handleTeamNameChange = (index: number, value: string) => {
+  const handleTeamNameChange = (id: string, value: string) => {
     if (hasPlayHistory) return;
     clearError();
-    setTeams(prev =>
-      prev.map((t, i) => (i === index ? { ...t, name: value } : t))
+    setTeamRows((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, name: value } : t))
     );
   };
 
   // 팀 삭제
-  const handleRemoveTeam = (index: number) => {
+  const handleRemoveTeam = (id: string) => {
     clearError();
-    setTeams(prev => prev.filter((_, i) => i !== index));
+    setTeamRows((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // TODO 팀 순서 변경
+  // 팀 순서 변경 (위/아래 버튼)
+  const moveTeam = (index: number, direction: -1 | 1) => {
+    if (hasPlayHistory) return;
+    clearError();
+    setTeamRows((prev) => {
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= prev.length) return prev;
 
+      const next = [...prev];
+      [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
+      return next;
+    });
+  };
+
+  // 팀 순서 변경 (드래그 앤 드롭)
+  const handleReorderTeams = (next: TeamRow[]) => {
+    if (hasPlayHistory) return;
+    clearError();
+    setTeamRows(next);
+  };
 
   // ====== 제출 ======
   const handleSubmit = async (e: React.FormEvent) => {
@@ -106,7 +128,7 @@ export default function CharadesUpdate() {
     try {
       setLoading(true);
 
-      const normalizedTeams: UpdateTeamDto[] = teams.map(t => ({
+      const normalizedTeams: UpdateTeamDto[] = teamRows.map(t => ({
         code: t.code ?? null,
         name: t.name ?? "",
       }));
@@ -295,32 +317,17 @@ export default function CharadesUpdate() {
             <small id="teamNames-desc1" className="font-gray">최소 1팀, 최대 26팀까지 추가할 수 있습니다.</small>
             <small id="teamNames-desc2" className="font-gray">팀 이름 미입력시 다음과 같이 저장됩니다: Team A, Team B, ...</small>
 
-            <ul className="team-list">
-              {teams.map((t, idx) => (
-                <li key={idx}>
-                  <input
-                    type="text"
-                    name="teamName"
-                    value={t.name}
-                    placeholder={`Team ${String.fromCharCode(65 + idx)}`}
-                    onChange={(e) => handleTeamNameChange(idx, e.target.value)}
-                    disabled={hasPlayHistory}
-                  />
-                  {!hasPlayHistory && teams.length > 1 && (
-                    <button
-                      type="button"
-                      aria-label={`Team ${String.fromCharCode(65 + idx)} 삭제`}
-                      className="btn btn-danger del-btn"
-                      onClick={() => handleRemoveTeam(idx)}
-                    >
-                      삭제
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <TeamOrderList
+              teams={teamRows}
+              disabled={hasPlayHistory}
+              canRemove={teamRows.length > 1}
+              onNameChange={handleTeamNameChange}
+              onRemove={handleRemoveTeam}
+              onMove={moveTeam}
+              onReorder={handleReorderTeams}
+            />
 
-            {!hasPlayHistory && teams.length < 26 && (
+            {!hasPlayHistory && teamRows.length < 26 && (
               <button
                 type="button"
                 aria-label="팀 추가"
