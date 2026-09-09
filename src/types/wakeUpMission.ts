@@ -6,6 +6,7 @@ export interface WakeUpMission {
 
 export interface WakeUpMissionGame {
     code: string;
+    // TODO: 카카오톡 알림 기능 추후 구현 예정 (사업자 인증/알림톡 또는 카카오 로그인 친구 동의 방식 결정 필요)
     wakeUpTime: string;
     missions: WakeUpMission[];
     contacts?: string; // "010-1111-2222,010-3333-4444"
@@ -14,6 +15,7 @@ export interface WakeUpMissionGame {
 export interface CreateGameRequest {
     numPlayers: number;
     password: string;
+    // TODO: 카카오톡 알림 기능 추후 구현 예정 (사업자 인증/알림톡 또는 카카오 로그인 친구 동의 방식 결정 필요)
     wakeUpTime?: string;
     contacts?: string;
 }

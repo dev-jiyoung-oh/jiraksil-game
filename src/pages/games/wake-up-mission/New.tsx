@@ -1,6 +1,7 @@
 import { createGame } from "@/api/wakeUpMission";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+// TODO: 카카오톡 알림 기능 추후 구현 예정 (사업자 인증/알림톡 또는 카카오 로그인 친구 동의 방식 결정 필요)
 //import { formatPhoneNumber } from '@/utils/phoneNumber';
 import './New.css';
 
